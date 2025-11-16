@@ -1,7 +1,23 @@
+#include <spdlog/spdlog.h>
 #include <iostream>
+
+#include "io_manager.h"
+
+__attribute__((noreturn)) void Usage()
+{
+    std::cerr << "USAGE: ./pname [file_name=</path/to/input_file.txt>] [k=<number of subgraph(s) to find>]";
+    exit(EXIT_FAILURE);
+}
 
 int main(const int argc, const char **argv)
 {
-    std::cout << "Hello, World!\n";
+    if (argc != 3) {
+        Usage();
+    }
+    const std::string fileName = argv[1];
+
+    spdlog::info("Reading file: {}...", fileName);
+    const auto [A1, A2] = parseInputFile(fileName);
+
     return 0;
 }
