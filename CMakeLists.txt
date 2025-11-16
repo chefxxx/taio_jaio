@@ -3,7 +3,7 @@
 # ------------------------------------------------------------------------------ #
 
 cmake_minimum_required(VERSION 3.30)
-set(PROJECT_NAME "cpp_template")
+set(PROJECT_NAME "TAiO_Project")
 
 set(MAIN ${PROJECT_NAME})
 set(TEST ${PROJECT_NAME}_test)

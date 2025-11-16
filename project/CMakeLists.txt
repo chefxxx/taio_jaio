@@ -71,7 +71,7 @@ elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
         message(FATAL_ERROR "Compiler " "${CXX_COMPILER_ID}" " is not supported.")
     endif ()
 
-    target_compile_options(${CPU_LIB} PRIVATE
+    target_compile_options(${LIB} PRIVATE
             $<$<CXX_COMPILER_ID:GNU>:-O3 -march=native -funroll-loops>
             $<$<CXX_COMPILER_ID:Clang>:-O3 -march=native -funroll-loops>
             $<$<CXX_COMPILER_ID:AppleClang>:-O3 -march=native -funroll-loops>
