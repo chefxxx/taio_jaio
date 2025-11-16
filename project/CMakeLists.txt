@@ -15,7 +15,8 @@ message("Loading CXX library...")
 add_library(${LIB} STATIC ${CXX_SOURCES})
 target_include_directories(${LIB} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
-target_link_libraries(${LIB} PUBLIC spdlog::spdlog)
+
+target_link_libraries(${LIB} PUBLIC spdlog::spdlog Eigen3::Eigen)
 
 # ------------------------------------------------------------------------------ #
 # Define executable #
