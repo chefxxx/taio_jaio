@@ -5,8 +5,8 @@
 #ifndef TAIO_PROJECT_GENERATE_START_COST_H
 #define TAIO_PROJECT_GENERATE_START_COST_H
 
-#include <Eigen/Dense>
+#include "eigen_port.h"
 
-Eigen::MatrixXd generateStartCost(const Eigen::MatrixXd &m_1, const Eigen::MatrixXd &m_2);
+Matrix generateStartCost(const Matrix &m_1, const Matrix &m_2);
 
 #endif // TAIO_PROJECT_GENERATE_START_COST_H
