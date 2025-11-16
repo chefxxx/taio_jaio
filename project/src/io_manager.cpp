@@ -36,7 +36,6 @@ Matrix convertToMatrix(std::ifstream &inputFile)
         while (std::getline(values, segment, ' ')) {
             segList.push_back(std::stoi(segment));
         }
-        assert(v == segList.size());
         for (int j = 0; j < v; ++j) {
             a(i, j) = segList[j];
         }
