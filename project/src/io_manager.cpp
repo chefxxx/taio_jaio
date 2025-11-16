@@ -8,7 +8,7 @@
 
 void parseInputFile(const std::string_view t_inputFileName)
 {
-    const std::ifstream inputFile(t_inputFileName);
+    const std::ifstream inputFile((t_inputFileName.data()));
     if (!inputFile.is_open()) {
         spdlog::error("Failed to open file {}", t_inputFileName);
         exit(EXIT_FAILURE);
