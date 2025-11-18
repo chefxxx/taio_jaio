@@ -2,21 +2,30 @@
 // Created by Mateusz Mikiciuk on 16/11/2025.
 //
 
-#include <spdlog/spdlog.h>
 #include <set>
+#include <spdlog/spdlog.h>
 
 #include "exact_solution_infra.h"
+#include "common.h"
 
-void performExactAlgorithm(const Matrix& A1, const Matrix& A2)
+void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const int t_k)
 {
     spdlog::info("Preparing exact algorithm run...");
+
     // -----------------------
     // Prepare input variables
     // -----------------------
-    const auto rows = A1.rows();
-    const auto cols = A2.rows();
-    Matrix M(rows, cols);
-    M.setZero();
-    const int R = 0;
-    std::set<int> C;
+    const Matrix A1 = t_A1;
+    const int    v1 = A1.rows();
+    Matrix       A2 = t_A2;
+    int          v2 = A2.rows();
+
+    // the case where we need to add isolated vertices to A2
+    v2 = completeVerticesNumber(v1, v2, t_k);
+    if (v2 > A2.rows())
+        extendVertices(A2, v2);
+
+    // ------------------
+    // Run main algorithm
+    // ------------------
 }

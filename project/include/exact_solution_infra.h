@@ -7,6 +7,6 @@
 
 #include "eigen_port.h"
 
-void performExactAlgorithm(const Matrix& A1, const Matrix& A2);
+void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, int t_k);
 
-#endif //EXACT_SOLUTION_INFRA_H
+#endif // EXACT_SOLUTION_INFRA_H

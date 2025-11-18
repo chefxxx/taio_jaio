@@ -1,5 +1,5 @@
-#include <spdlog/spdlog.h>
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 #include "io_manager.h"
 
@@ -16,7 +16,6 @@ int main(const int argc, const char **argv)
     }
     const std::string fileName = argv[1];
 
-    spdlog::info("Reading file: {}...", fileName);
     const auto [A1, A2] = parseInputFile(fileName);
 
     return 0;

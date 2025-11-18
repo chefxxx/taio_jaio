@@ -10,6 +10,7 @@
 #include "eigen_port.h"
 
 std::tuple<Matrix, Matrix> parseInputFile(std::string_view t_inputFileName);
-Matrix convertToMatrix(std::ifstream &inputFile);
+Matrix                     convertToMatrix(std::ifstream &inputFile);
+
 
 #endif // IO_MANAGER_H
