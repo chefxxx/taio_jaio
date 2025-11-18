@@ -2,11 +2,10 @@
 // Created by Mateusz Mikiciuk on 16/11/2025.
 //
 
-#include <set>
-#include <spdlog/spdlog.h>
-
 #include "exact_solution_infra.h"
 #include "common.h"
+
+#include <spdlog/spdlog.h>
 
 void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const int t_k)
 {
@@ -29,20 +28,32 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const int t_k
     M.setZero();
 
     // initialize cols set
-    std::vector<long> tmp(M.cols());
-    std::iota(tmp.begin(), tmp.end(), 0);
-    const std::set<long> cols{tmp.begin(), tmp.end()};
-
-    constexpr long R = 0;
+    const std::vector<bool> cols(M.cols());
 
     // ------------------
     // Run main algorithm
     // ------------------
-    subgraphIsomorphism(cols, R, t_A1, A2, M);
+    const SI_Problem globalState{t_A1, A2};
+    SI_State initState{cols, M, 0};
+    subgraphIsomorphismSerial(globalState, initState);
 }
 
-void subgraphIsomorphism(std::set<long> t_cols, long t_R, Matrix t_A1, Matrix t_A2, Matrix t_M)
+void subgraphIsomorphismSerial(const SI_Problem &P, SI_State &state)
 {
-    spdlog::info("Procedure SubgraphIsomorphism run...");
+    spdlog::info("Procedure SubgraphIsomorphismParallel run...");
+    if (state.R == P.v1) {
+        // procedure find or extend run
+        return;
+    }
 
+    for (int i = 0; i < state.cols.size(); ++i) {
+        if (!state.cols[i]) {
+            // init new state
+            state.serialNextState(i);
+            // recurse
+            subgraphIsomorphismSerial(P, state);
+            // back to state
+            state.serialPrevState(i);
+        }
+    }
 }
