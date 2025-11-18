@@ -3,6 +3,7 @@
 //
 
 #include "exact_solution_infra.h"
+
 #include <algorithm>
 #include <iostream>
 #include <spdlog/spdlog.h>
@@ -36,7 +37,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const int t_k
     // Run main algorithm
     // ------------------
     const SI_Problem globalState{t_A1, A2};
-    SI_State initState{cols, M, 0};
+    SI_State         initState{cols, M, 0};
     spdlog::info("Procedure SubgraphIsomorphismSerial run...");
     subgraphIsomorphismSerial(globalState, initState);
 }

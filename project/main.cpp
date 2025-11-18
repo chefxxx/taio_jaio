@@ -1,8 +1,8 @@
 #include <iostream>
 #include <spdlog/spdlog.h>
 
-#include "io_manager.h"
 #include "exact_solution_infra.h"
+#include "io_manager.h"
 
 __attribute__((noreturn)) void Usage()
 {
@@ -19,7 +19,7 @@ int main(const int argc, const char **argv)
         Usage();
     }
     const std::string fileName = argv[1];
-    const int k = std::stoi(argv[2]);
+    const int         k        = std::stoi(argv[2]);
 
     // -----------
     // Parse input
