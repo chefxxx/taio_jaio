@@ -15,17 +15,26 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const int t_k
     // -----------------------
     // Prepare input variables
     // -----------------------
-    const Matrix A1 = t_A1;
-    const int    v1 = A1.rows();
-    Matrix       A2 = t_A2;
-    int          v2 = A2.rows();
+    const long v1 = t_A1.rows();
+    Matrix     A2 = t_A2;
+    long       v2 = A2.rows();
 
     // the case where we need to add isolated vertices to A2
     v2 = completeVerticesNumber(v1, v2, t_k);
     if (v2 > A2.rows())
         extendVertices(A2, v2);
 
+    Matrix M(v1, v2);
+    M.setZero(v1, v2);
+    std::set<long> cols{};
+
     // ------------------
     // Run main algorithm
     // ------------------
 }
+
+// void subgraphIsomorphism(std::set<long> t_cols, long t_R, Matrix t_A1, Matrix t_A2, Matrix t_M)
+// {
+//     spdlog::info("Procedure SubgraphIsomorphism run...");
+//
+// }

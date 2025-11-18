@@ -24,16 +24,15 @@ inline long completeVerticesNumber(const long t_v1, long t_v2, const int t_k)
     return t_v2;
 }
 
-inline void extendVertices(Matrix &t_A, const int t_n)
+inline void extendVertices(Matrix &t_A, const long t_n)
 {
     if (t_n == t_A.rows())
         return;
     const long beforeN = t_A.rows();
     t_A.conservativeResize(t_n, t_n);
     for (long i = beforeN; i < t_n; ++i) {
-        for (long j = beforeN; j < t_n; ++j) {
-            t_A(i, j) = 0;
-        }
+        t_A.row(i).setZero();
+        t_A.col(i).setZero();
     }
 }
 
