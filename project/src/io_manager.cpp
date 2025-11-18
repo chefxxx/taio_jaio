@@ -10,6 +10,7 @@
 
 std::tuple<Matrix, Matrix> parseInputFile(const std::string_view t_inputFileName)
 {
+    spdlog::info("Reading file: {}...", t_inputFileName);
     std::ifstream inputFile(t_inputFileName.data());
     if (!inputFile.is_open()) {
         spdlog::error("Failed to open file {}", t_inputFileName);
@@ -26,7 +27,7 @@ Matrix convertToMatrix(std::ifstream &inputFile)
     std::string line;
     std::getline(inputFile, line);
     const auto v = std::stoi(line);
-    Matrix     a(v,v);
+    Matrix     a(v, v);
 
     for (int i = 0; i < v; ++i) {
         std::getline(inputFile, line);

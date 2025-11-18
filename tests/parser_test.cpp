@@ -3,25 +3,21 @@
 //
 
 #include <gtest/gtest.h>
+
 #include "io_manager.h"
 
 TEST(ParserTest, smallMatricesReadoutSuite)
 {
-    const std::string fileName = "../../sample_files/small_graphs_test.txt";
-    Eigen::Matrix<int, 6, 6> first {
+    const std::string        fileName = "../../sample_files/small_graphs_test.txt";
+    Eigen::Matrix<int, 6, 6> first{
         {1, 2, 3, 4, 5, 6},
-            {6, 5, 4, 3, 2, 1},
-            {1, 2, 3, 4, 5, 6},
-            {6, 5, 4, 3, 2, 1},
-            {1, 2, 3, 4, 5, 6},
-            {6, 5, 4, 3, 2, 1},
+        {6, 5, 4, 3, 2, 1},
+        {1, 2, 3, 4, 5, 6},
+        {6, 5, 4, 3, 2, 1},
+        {1, 2, 3, 4, 5, 6},
+        {6, 5, 4, 3, 2, 1},
     };
-    Eigen::Matrix<int, 4, 4> second {
-        {4, 4, 4, 4},
-            {4, 4, 4, 4},
-            {4, 4, 4, 4},
-            {4, 4, 4, 4}
-    };
+    Eigen::Matrix<int, 4, 4> second{{4, 4, 4, 4}, {4, 4, 4, 4}, {4, 4, 4, 4}, {4, 4, 4, 4}};
     const auto [M1, M2] = parseInputFile(fileName);
     ASSERT_EQ(M1.rows(), 6);
     ASSERT_EQ(M1.cols(), 6);
