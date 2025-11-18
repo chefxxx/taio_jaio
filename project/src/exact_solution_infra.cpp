@@ -3,7 +3,7 @@
 //
 
 #include "exact_solution_infra.h"
-
+#include <algorithm>
 #include <iostream>
 #include <spdlog/spdlog.h>
 
@@ -45,7 +45,12 @@ void subgraphIsomorphismSerial(const SI_Problem &t_P, SI_State &t_state)
 {
     if (t_state.R == t_P.v1) {
         // procedure find or extend run
-        std::cout << t_state.M << '\n';
+        if (const auto isValid = checkIsomorphism(t_P.A1, t_P.A2, t_state.M)) {
+            // add M to solutions
+        }
+        else {
+            // compute extension matrix H
+        }
         return;
     }
 
@@ -61,19 +66,14 @@ void subgraphIsomorphismSerial(const SI_Problem &t_P, SI_State &t_state)
     }
 }
 
-void findOrExtend(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M)
+bool checkIsomorphism(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M)
 {
-    bool isValid = true;
     const auto A1prim = t_M * t_A2 * t_M.transpose();
     for (long i = 0; i < t_A1.rows(); ++i) {
         for (long j = 0; j < t_A1.cols(); ++j) {
-            if (t_A1(i, j) > A1prim(i,j)) {
-                isValid = false;
-                break;
-            }
-        }
-        if (!isValid) {
-            break;
+            if (t_A1(i, j) > A1prim(i, j))
+                return false;
         }
     }
+    return true;
 }
