@@ -24,17 +24,25 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const int t_k
     if (v2 > A2.rows())
         extendVertices(A2, v2);
 
+    // initialize matrix M
     Matrix M(v1, v2);
-    M.setZero(v1, v2);
-    std::set<long> cols{};
+    M.setZero();
+
+    // initialize cols set
+    std::vector<long> tmp(M.cols());
+    std::iota(tmp.begin(), tmp.end(), 0);
+    const std::set<long> cols{tmp.begin(), tmp.end()};
+
+    constexpr long R = 0;
 
     // ------------------
     // Run main algorithm
     // ------------------
+    subgraphIsomorphism(cols, R, t_A1, A2, M);
 }
 
-// void subgraphIsomorphism(std::set<long> t_cols, long t_R, Matrix t_A1, Matrix t_A2, Matrix t_M)
-// {
-//     spdlog::info("Procedure SubgraphIsomorphism run...");
-//
-// }
+void subgraphIsomorphism(std::set<long> t_cols, long t_R, Matrix t_A1, Matrix t_A2, Matrix t_M)
+{
+    spdlog::info("Procedure SubgraphIsomorphism run...");
+
+}
