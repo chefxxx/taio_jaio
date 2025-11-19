@@ -76,13 +76,7 @@ void subgraphIsomorphismSerial(const SI_Problem                        &t_P,
 bool checkIsomorphism(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M)
 {
     const auto A1prim = t_M * t_A2 * t_M.transpose();
-    for (long i = 0; i < t_A1.rows(); ++i) {
-        for (long j = 0; j < t_A1.cols(); ++j) {
-            if (t_A1(i, j) > A1prim(i, j))
-                return false;
-        }
-    }
-    return true;
+    return (t_A1.array() <= A1prim.array()).all();
 }
 
 Matrix computeSubgraphFromMapping(const Matrix &t_A1, const Matrix &t_M)
@@ -95,10 +89,7 @@ Matrix computeExtension(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_
     auto A2prim = computeSubgraphFromMapping(t_A1, t_M);
     assert(A2prim.rows() == t_A2.rows());
     assert(A2prim.cols() == t_A2.cols());
-    for (long i = 0; i < t_A2.rows(); ++i) {
-        for (long j = 0; j < t_A2.cols(); ++j) {
-            A2prim(i,j) = std::max(A2prim(i,j) - t_A2(i,j), 0);
-        }
-    }
+    A2prim -= t_A2;
+    A2prim = A2prim.cwiseMax(0);
     return A2prim;
 }

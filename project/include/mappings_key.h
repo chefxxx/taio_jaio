@@ -14,13 +14,7 @@ struct BitVecKey
     {
         bits = std::vector(t_matrix.rows(), false);
         for (int i = 0; i < t_matrix.rows(); ++i) {
-            const auto row = t_matrix.row(i);
-            for (int j = 0; j < t_matrix.cols(); ++j) {
-                if (row[j] == 1) {
-                    bits[i] = true;
-                    break;
-                }
-            }
+            bits[i] = (t_matrix.row(i).array() == 1).any();
         }
     }
 
