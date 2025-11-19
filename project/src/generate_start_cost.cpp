@@ -2,6 +2,7 @@
 // Created by mshamrai on 11/16/25.
 //
 #include "generate_start_cost.h"
+#include <map>
 
 Matrix generateStartCost(const Matrix &m_1, const Matrix &m_2)
 {
@@ -30,5 +31,40 @@ Matrix generateStartCost(const Matrix &m_1, const Matrix &m_2)
         sources_2[i][1] = outNeighborsCountForM2[i];
     }
 
+    auto labeling = findLabels(sources_1, sources_2);
+
+    for (int i = 0; i < s1; ++i) {
+        labels_1[i] = labeling[sources_1[i]];
+    }
+
+    for (int i = 0; i < s2; ++i) {
+        labels_2[i] = labeling[sources_2[i]];
+    }
+
     return Matrix::Identity(s1, s1);
+}
+
+
+std::map<std::vector<int>, int> findLabels(const std::vector<std::vector<int>> &sources1,
+    const std::vector<std::vector<int>> &sources2)
+{
+    std::vector copy1 = sources1;
+    std::ranges::sort(copy1, [](const std::vector<int> &a, const std::vector<int> &b) {
+        return std::ranges::lexicographical_compare(a, b);
+    });
+
+    std::vector copy2 = sources2;
+    std::ranges::sort(copy2, [](const std::vector<int> &a, const std::vector<int> &b) {
+        return std::ranges::lexicographical_compare(a, b);
+    });
+
+    std::vector<std::vector<int>> merged;
+    std::ranges::merge(copy1, copy2, std::back_inserter(merged));
+
+    std::map<std::vector<int>, int> labels;
+
+    for (unsigned i = 0, l = 0; i < merged.size(); ++i) {
+        labels.try_emplace(merged[i], l).second == true ? l++ : 0;
+    }
+    return labels;
 }
