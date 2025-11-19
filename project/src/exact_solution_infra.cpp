@@ -53,7 +53,7 @@ void subgraphIsomorphismSerial(const SI_Problem                        &t_P,
         // procedure find or extend run
         if (const auto isValid = checkIsomorphism(t_P.A1, t_P.A2, t_state.M)) {
             // add M to solutions
-            addToMappings(t_state.M, t_mappings);
+            t_mappings.try_emplace(BitVecKey(t_state.M), t_state.M);
         }
         else {
             // compute extension matrix H
@@ -85,12 +85,4 @@ bool checkIsomorphism(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M)
     return true;
 }
 
-void addToMappings(const Matrix &t_M, std::unordered_map<BitVecKey, Matrix> &t_mappings)
-{
-    const auto key = BitVecKey(t_M);
-    if (t_mappings.contains(key)) {
-        spdlog::info("Mapping on given subset of vertices was already found!");
-        return;
-    }
-    t_mappings.insert({key, t_M});
-}
+
