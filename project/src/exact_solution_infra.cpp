@@ -33,21 +33,29 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const int t_k
     // initialize cols set
     const std::vector<bool> cols(M.cols());
 
+    // initialize algorithm variables
+    const SI_Problem globalState{t_A1, A2};
+    SI_State         initState{cols, M, 0};
+
+    // initialize variables which store solutions
+    std::unordered_map<MappingsKey, Matrix> mappings;
+
     // ------------------
     // Run main algorithm
     // ------------------
-    const SI_Problem globalState{t_A1, A2};
-    SI_State         initState{cols, M, 0};
     spdlog::info("Procedure SubgraphIsomorphismSerial run...");
-    subgraphIsomorphismSerial(globalState, initState);
+    subgraphIsomorphismSerial(globalState, initState, mappings);
 }
 
-void subgraphIsomorphismSerial(const SI_Problem &t_P, SI_State &t_state)
+void subgraphIsomorphismSerial(const SI_Problem                        &t_P,
+                               SI_State                                &t_state,
+                               std::unordered_map<MappingsKey, Matrix> &t_mappings)
 {
     if (t_state.R == t_P.v1) {
         // procedure find or extend run
         if (const auto isValid = checkIsomorphism(t_P.A1, t_P.A2, t_state.M)) {
             // add M to solutions
+
         }
         else {
             // compute extension matrix H
@@ -60,7 +68,7 @@ void subgraphIsomorphismSerial(const SI_Problem &t_P, SI_State &t_state)
             // init new state
             t_state.serialNextState(i);
             // recurse
-            subgraphIsomorphismSerial(t_P, t_state);
+            subgraphIsomorphismSerial(t_P, t_state, t_mappings);
             // back to state
             t_state.serialPrevState(i);
         }
@@ -77,4 +85,11 @@ bool checkIsomorphism(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M)
         }
     }
     return true;
+}
+
+bool addToMappings(const Matrix                            &t_A1,
+                   const Matrix                            &t_A2,
+                   const Matrix                            &t_M,
+                   std::unordered_map<MappingsKey, Matrix> &t_mappings)
+{
 }
