@@ -25,8 +25,26 @@ struct MappingsKey
         }
     }
 
-private:
-    std::vector<bool> m_verticesUsed;
+    std::vector<bool> verticesUsed;
 };
+
+inline void hash_combine(size_t &seed, const size_t value)
+{
+    seed ^= value + 0x9e3779b97f4a7c15ULL + (seed << 6) + (seed >> 2);
+}
+
+template<>
+struct std::hash<MappingsKey>
+{
+    size_t operator()(const MappingsKey &t_key) const noexcept
+    {
+        size_t hash = 0;
+        for (const bool b : t_key.verticesUsed) {
+            hash_combine(hash, b ? 1 : 0);
+        }
+        return hash;
+    }
+};
+
 
 #endif //MAPPINGS_KEY_H
