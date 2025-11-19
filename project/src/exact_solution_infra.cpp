@@ -2,10 +2,11 @@
 // Created by Mateusz Mikiciuk on 16/11/2025.
 //
 
+#include "exact_solution_infra.h"
+
 #include <iostream>
 #include <spdlog/spdlog.h>
 
-#include "exact_solution_infra.h"
 #include "common.h"
 
 void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const int t_k)
@@ -37,26 +38,33 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const int t_k
 
     // initialize variables which store solutions
     std::unordered_map<BitVecKey, Matrix> mappings;
+    std::unordered_map<BitVecKey, std::vector<Matrix>> extensions;
 
     // ------------------
     // Run main algorithm
     // ------------------
     spdlog::info("Procedure SubgraphIsomorphismSerial run...");
-    subgraphIsomorphismSerial(globalState, initState, mappings);
+    subgraphIsomorphismSerial(globalState, initState, mappings, extensions);
 }
 
-void subgraphIsomorphismSerial(const SI_Problem                        &t_P,
-                               SI_State                                &t_state,
-                               std::unordered_map<BitVecKey, Matrix> &t_mappings)
+void subgraphIsomorphismSerial(const SI_Problem                                   &t_P,
+                               SI_State                                           &t_state,
+                               std::unordered_map<BitVecKey, Matrix>              &t_mappings,
+                               std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions)
 {
     if (t_state.R == t_P.v1) {
         // procedure find or extend run
+        const auto key = BitVecKey(t_state.M);
         if (const auto isValid = checkIsomorphism(t_P.A1, t_P.A2, t_state.M)) {
             // add M to solutions
-            t_mappings.try_emplace(BitVecKey(t_state.M), computeSubgraphFromMapping(t_P.A1, t_state.M));
+            t_mappings.try_emplace(key, computeSubgraphFromMapping(t_P.A1, t_state.M));
         }
         else {
-            // compute extension matrix H
+            // compute extension matrix H and add it to extensions
+            if (!t_extensions.contains(key)) {
+                t_extensions[key] = {};
+            }
+            t_extensions[key].push_back(computeExtension(t_P.A1, t_P.A2, t_state.M));
         }
         return;
     }
@@ -66,7 +74,7 @@ void subgraphIsomorphismSerial(const SI_Problem                        &t_P,
             // init new state
             t_state.serialNextState(i);
             // recurse
-            subgraphIsomorphismSerial(t_P, t_state, t_mappings);
+            subgraphIsomorphismSerial(t_P, t_state, t_mappings, t_extensions);
             // back to state
             t_state.serialPrevState(i);
         }
@@ -79,16 +87,11 @@ bool checkIsomorphism(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M)
     return (t_A1.array() <= A1prim.array()).all();
 }
 
-Matrix computeSubgraphFromMapping(const Matrix &t_A1, const Matrix &t_M)
-{
-    return t_M.transpose() * t_A1 * t_M;
-}
+Matrix computeSubgraphFromMapping(const Matrix &t_A1, const Matrix &t_M) { return t_M.transpose() * t_A1 * t_M; }
 
 Matrix computeExtension(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M)
 {
     auto A2prim = computeSubgraphFromMapping(t_A1, t_M);
-    assert(A2prim.rows() == t_A2.rows());
-    assert(A2prim.cols() == t_A2.cols());
     A2prim -= t_A2;
     A2prim = A2prim.cwiseMax(0);
     return A2prim;

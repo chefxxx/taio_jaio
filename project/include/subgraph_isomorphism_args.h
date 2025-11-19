@@ -50,4 +50,4 @@ struct SI_State
 };
 
 
-#endif //SUBGRAPH_ISOMORPHISM_ARGS_H
+#endif // SUBGRAPH_ISOMORPHISM_ARGS_H

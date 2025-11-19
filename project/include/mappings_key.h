@@ -18,10 +18,7 @@ struct BitVecKey
         }
     }
 
-    bool operator==(const BitVecKey &other) const
-    {
-        return bits == other.bits;
-    }
+    bool operator==(const BitVecKey &other) const { return bits == other.bits; }
 
     std::vector<bool> bits;
 };
@@ -31,8 +28,7 @@ inline void hash_combine(size_t &seed, const size_t value)
     seed ^= value + 0x9e3779b97f4a7c15ULL + (seed << 6) + (seed >> 2);
 }
 
-template<>
-struct std::hash<BitVecKey>
+template <> struct std::hash<BitVecKey>
 {
     size_t operator()(const BitVecKey &t_key) const noexcept
     {
@@ -45,4 +41,4 @@ struct std::hash<BitVecKey>
 };
 
 
-#endif //MAPPINGS_KEY_H
+#endif // MAPPINGS_KEY_H
