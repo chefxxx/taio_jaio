@@ -10,17 +10,18 @@
 
 struct BitVecKey
 {
-    explicit BitVecKey(const Matrix &t_matrix)
+    explicit BitVecKey(const Matrix &t_matrix) : M(t_matrix)
     {
-        bits = std::vector(t_matrix.rows(), false);
-        for (int i = 0; i < t_matrix.rows(); ++i) {
-            bits[i] = (t_matrix.row(i).array() == 1).any();
+        bits = std::vector(t_matrix.cols(), false);
+        for (int j = 0; j < t_matrix.cols(); ++j) {
+            bits[j] = (t_matrix.col(j).array() == 1).any();
         }
     }
 
     bool operator==(const BitVecKey &other) const { return bits == other.bits; }
 
     std::vector<bool> bits;
+    Matrix M;
 };
 
 inline void hash_combine(size_t &seed, const size_t value)

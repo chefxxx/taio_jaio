@@ -45,6 +45,9 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const int t_k
     // ------------------
     spdlog::info("Procedure SubgraphIsomorphismSerial run...");
     subgraphIsomorphismSerial(globalState, initState, mappings, extensions);
+    // TODO: clear extensions for which keys are inside mappings, this has to be done after
+    // TODO: procedure subgraphIsomorphismSerial finished
+
 }
 
 void subgraphIsomorphismSerial(const SI_Problem                                   &t_P,
