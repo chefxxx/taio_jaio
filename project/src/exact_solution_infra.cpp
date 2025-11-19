@@ -38,7 +38,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const int t_k
     SI_State         initState{cols, M, 0};
 
     // initialize variables which store solutions
-    std::unordered_map<MappingsKey, Matrix> mappings;
+    std::unordered_map<BitVecKey, Matrix> mappings;
 
     // ------------------
     // Run main algorithm
@@ -49,7 +49,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const int t_k
 
 void subgraphIsomorphismSerial(const SI_Problem                        &t_P,
                                SI_State                                &t_state,
-                               std::unordered_map<MappingsKey, Matrix> &t_mappings)
+                               std::unordered_map<BitVecKey, Matrix> &t_mappings)
 {
     if (t_state.R == t_P.v1) {
         // procedure find or extend run
@@ -90,6 +90,6 @@ bool checkIsomorphism(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M)
 bool addToMappings(const Matrix                            &t_A1,
                    const Matrix                            &t_A2,
                    const Matrix                            &t_M,
-                   std::unordered_map<MappingsKey, Matrix> &t_mappings)
+                   std::unordered_map<BitVecKey, Matrix> &t_mappings)
 {
 }

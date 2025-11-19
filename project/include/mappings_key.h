@@ -1,6 +1,5 @@
 //
 // Created by Mateusz Mikiciuk on 19/11/2025.
-//
 
 #ifndef MAPPINGS_KEY_H
 #define MAPPINGS_KEY_H
@@ -9,23 +8,23 @@
 
 #include "eigen_port.h"
 
-struct MappingsKey
+struct BitVecKey
 {
-    explicit MappingsKey(const Matrix &t_matrix)
+    explicit BitVecKey(const Matrix &t_matrix)
     {
-        m_verticesUsed = std::vector(t_matrix.rows(), false);
+        bits = std::vector(t_matrix.rows(), false);
         for (int i = 0; i < t_matrix.rows(); ++i) {
             const auto row = t_matrix.row(i);
             for (int j = 0; j < t_matrix.cols(); ++j) {
                 if (row[j] == 1) {
-                    m_verticesUsed[i] = true;
+                    bits[i] = true;
                     break;
                 }
             }
         }
     }
 
-    std::vector<bool> verticesUsed;
+    std::vector<bool> bits;
 };
 
 inline void hash_combine(size_t &seed, const size_t value)
@@ -34,12 +33,12 @@ inline void hash_combine(size_t &seed, const size_t value)
 }
 
 template<>
-struct std::hash<MappingsKey>
+struct std::hash<BitVecKey>
 {
-    size_t operator()(const MappingsKey &t_key) const noexcept
+    size_t operator()(const BitVecKey &t_key) const noexcept
     {
         size_t hash = 0;
-        for (const bool b : t_key.verticesUsed) {
+        for (const bool b : t_key.bits) {
             hash_combine(hash, b ? 1 : 0);
         }
         return hash;

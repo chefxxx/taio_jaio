@@ -14,10 +14,10 @@ bool checkIsomorphism(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M)
 bool addToMappings(const Matrix                            &t_A1,
                    const Matrix                            &t_A2,
                    const Matrix                            &t_M,
-                   std::unordered_map<MappingsKey, Matrix> &t_mappings);
+                   std::unordered_map<BitVecKey, Matrix> &t_mappings);
 void subgraphIsomorphismSerial(const SI_Problem                        &t_P,
                                SI_State                                &t_state,
-                               std::unordered_map<MappingsKey, Matrix> &t_mappings);
+                               std::unordered_map<BitVecKey, Matrix> &t_mappings);
 
 
 #endif // EXACT_SOLUTION_INFRA_H
