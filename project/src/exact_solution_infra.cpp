@@ -53,7 +53,7 @@ void subgraphIsomorphismSerial(const SI_Problem                        &t_P,
         // procedure find or extend run
         if (const auto isValid = checkIsomorphism(t_P.A1, t_P.A2, t_state.M)) {
             // add M to solutions
-            t_mappings.try_emplace(BitVecKey(t_state.M), t_state.M);
+            t_mappings.try_emplace(BitVecKey(t_state.M), computeSubgraphFromMapping(t_P.A1, t_state.M));
         }
         else {
             // compute extension matrix H
@@ -85,4 +85,20 @@ bool checkIsomorphism(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M)
     return true;
 }
 
+Matrix computeSubgraphFromMapping(const Matrix &t_A1, const Matrix &t_M)
+{
+    return t_M.transpose() * t_A1 * t_M;
+}
 
+Matrix computeExtension(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M)
+{
+    auto A2prim = computeSubgraphFromMapping(t_A1, t_M);
+    assert(A2prim.rows() == t_A2.rows());
+    assert(A2prim.cols() == t_A2.cols());
+    for (long i = 0; i < t_A2.rows(); ++i) {
+        for (long j = 0; j < t_A2.cols(); ++j) {
+            A2prim(i,j) = std::max(A2prim(i,j) - t_A2(i,j), 0);
+        }
+    }
+    return A2prim;
+}
