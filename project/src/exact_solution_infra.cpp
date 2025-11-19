@@ -2,12 +2,10 @@
 // Created by Mateusz Mikiciuk on 16/11/2025.
 //
 
-#include "exact_solution_infra.h"
-
-#include <algorithm>
 #include <iostream>
 #include <spdlog/spdlog.h>
 
+#include "exact_solution_infra.h"
 #include "common.h"
 
 void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const int t_k)
@@ -55,7 +53,7 @@ void subgraphIsomorphismSerial(const SI_Problem                        &t_P,
         // procedure find or extend run
         if (const auto isValid = checkIsomorphism(t_P.A1, t_P.A2, t_state.M)) {
             // add M to solutions
-
+            addToMappings(t_state.M, t_mappings);
         }
         else {
             // compute extension matrix H
@@ -87,9 +85,12 @@ bool checkIsomorphism(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M)
     return true;
 }
 
-bool addToMappings(const Matrix                            &t_A1,
-                   const Matrix                            &t_A2,
-                   const Matrix                            &t_M,
-                   std::unordered_map<BitVecKey, Matrix> &t_mappings)
+void addToMappings(const Matrix &t_M, std::unordered_map<BitVecKey, Matrix> &t_mappings)
 {
+    const auto key = BitVecKey(t_M);
+    if (t_mappings.contains(key)) {
+        spdlog::info("Mapping on given subset of vertices was already found!");
+        return;
+    }
+    t_mappings.insert({key, t_M});
 }

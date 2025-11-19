@@ -11,10 +11,7 @@
 
 void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, int t_k);
 bool checkIsomorphism(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M);
-bool addToMappings(const Matrix                            &t_A1,
-                   const Matrix                            &t_A2,
-                   const Matrix                            &t_M,
-                   std::unordered_map<BitVecKey, Matrix> &t_mappings);
+void addToMappings(const Matrix &t_M, std::unordered_map<BitVecKey, Matrix> &t_mappings);
 void subgraphIsomorphismSerial(const SI_Problem                        &t_P,
                                SI_State                                &t_state,
                                std::unordered_map<BitVecKey, Matrix> &t_mappings);

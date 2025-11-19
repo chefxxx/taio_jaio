@@ -24,6 +24,11 @@ struct BitVecKey
         }
     }
 
+    bool operator==(const BitVecKey &other) const
+    {
+        return bits == other.bits;
+    }
+
     std::vector<bool> bits;
 };
 
