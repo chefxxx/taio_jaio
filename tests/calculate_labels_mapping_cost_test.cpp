@@ -27,9 +27,9 @@ TEST_F(CalculateLabelsMappingCost, calculate_if_same_class)
     int cost1 = calculateCostForTwoLabels(test1, s1);
     int cost2 = calculateCostForTwoLabels(test2, s2);
 
-    EXPECT_EQ(cost0, 0);
-    EXPECT_EQ(cost1, 0);
-    EXPECT_EQ(cost2, 0);
+    ASSERT_EQ(cost0, 0);
+    ASSERT_EQ(cost1, 0);
+    ASSERT_EQ(cost2, 0);
 }
 
 TEST_F(CalculateLabelsMappingCost, calculate_if_not_same_label)

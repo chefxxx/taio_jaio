@@ -17,6 +17,28 @@ std::vector<std::vector<int>> fillNeighborsStructure(const Matrix &m,
     return res;
 }
 
+
+void fillStartSources(std::vector<std::vector<int>> &sources, const std::vector<std::vector<int>> &outNeighbors,
+    const std::vector<std::vector<int>> &inNeighbors)
+{
+    auto n = sources.size();
+    for (unsigned i = 0; i < n; ++i) {
+        sources[i][0] = outNeighbors[i].size();
+        sources[i][1] = inNeighbors[i].size();
+    }
+}
+
+std::vector<int> assignLabels(const std::map<std::vector<int>, int> &labeling,
+    const std::vector<std::vector<int>> &sources)
+{
+    std::vector<int> labels;
+    auto n = sources.size();
+    for (unsigned i = 0; i < n; ++i) {
+        labels[i] = labeling.at(sources[i]);
+    }
+    return labels;
+}
+
 Matrix generateStartCost(const Matrix &m_1, const Matrix &m_2)
 {
     constexpr short SIZE_OF_FIRST_SOURCE = 2;
@@ -33,29 +55,15 @@ Matrix generateStartCost(const Matrix &m_1, const Matrix &m_2)
     std::vector<std::vector<int>> outNeighbors_2 = fillNeighborsStructure(m_2, getIndicesOfOutNeighbors);
     std::vector<std::vector<int>> inNeighbors_2 = fillNeighborsStructure(m_2, getIndicesOfInNeighbors);
 
-
-
-    for (int i = 0; i < s1; ++i) {
-        sources_1[i][0] = outNeighbors_1[i].size();
-        sources_1[i][1] = inNeighbors_1[i].size();
-    }
-
-    for (int i = 0; i < s2; ++i) {
-        sources_2[i][0] = outNeighbors_2[i].size();
-        sources_2[i][1] = inNeighbors_2[i].size();
-    }
+    fillStartSources(sources_1, outNeighbors_1, inNeighbors_1);
+    fillStartSources(sources_2, outNeighbors_2, inNeighbors_2);
 
     std::map<std::vector<int>, int> labeling = findLabels(sources_1, sources_2);
     std::map<std::vector<int>, int> oldLabeling = std::map<std::vector<int>, int>();
 
 
-    for (int i = 0; i < s1; ++i) {
-        labels_1[i] = labeling[sources_1[i]];
-    }
-
-    for (int i = 0; i < s2; ++i) {
-        labels_2[i] = labeling[sources_2[i]];
-    }
+    labels_1 = assignLabels(labeling, sources_1);
+    labels_2 = assignLabels(labeling, sources_2);
 
     while (oldLabeling.size() != labeling.size()) {
         oldLabeling = labeling;
@@ -91,12 +99,8 @@ Matrix generateStartCost(const Matrix &m_1, const Matrix &m_2)
             }
         }
         labeling = findLabels(sources_1, sources_2); // find the next labeling
-        for (int i = 0; i < s1; ++i) {
-            labels_1[i] = labeling[sources_1[i]];
-        }
-        for (int i = 0; i < s2; ++i) {
-            labels_2[i] = labeling[sources_2[i]];
-        }
+        labels_1 = assignLabels(labeling, sources_1);
+        labels_2 = assignLabels(labeling, sources_2);
     }
 
     Matrix labelsMappingCost = calculateLabelsMappingCost(labeling);

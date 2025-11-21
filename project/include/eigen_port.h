@@ -40,4 +40,20 @@ inline std::vector<int> getNumberOfInNeighbors(Matrix const& m)
     return getNumberOfOutNeighbors(m.transpose());
 }
 
+
+inline Matrix addZeroColumnAndZeroRowToMatrix(const Matrix &m)
+{
+    int oldN = m.rows();
+    int oldM = m.cols();
+    Matrix res(oldN + 1, oldM + 1);
+    for (int j = 0; j < oldM + 1; ++j)
+        res(0, j) = 0;
+    for (int i = 1; i < oldN + 1; ++i) {
+        res(i, 0) = 0;
+        for (int j = 1; j < oldM + 1; ++j) {
+            res(i, j) = m(i - 1, j - 1);
+        }
+    }
+    return res;
+}
 #endif // EIGEN_PORT_H
