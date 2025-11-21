@@ -39,6 +39,28 @@ std::vector<int> assignLabels(const std::map<std::vector<int>, int> &labeling,
     return labels;
 }
 
+void updateLabels(const std::vector<int> &labels, std::size_t numberOfLabels,
+    std::vector<std::vector<int>> &sources, const std::vector<std::vector<int>> &outNeighbors,
+    const std::vector<std::vector<int>> &inNeighbors)
+{
+    for (unsigned i = 0; i < sources.size(); ++i) {
+        // The first element is the vertex label from the last iteration
+        sources[i].resize((numberOfLabels << 1) + 1, 0); // 2k + 1
+        sources[i][0] = labels[i];
+        int label = -1;
+        for (int outNeighborIndex: outNeighbors[i]) {
+            // Firstly out
+            label = labels[outNeighborIndex];
+            ++sources[i][label + 1];
+        }
+        for (int inNeighborIndex: inNeighbors[i]) {
+            // Then inNeighbors
+            label = labels[inNeighborIndex];
+            ++sources[i][label + 1 + numberOfLabels];
+        }
+    }
+}
+
 Matrix generateStartCost(const Matrix &m_1, const Matrix &m_2)
 {
     constexpr short SIZE_OF_FIRST_SOURCE = 2;
@@ -69,35 +91,8 @@ Matrix generateStartCost(const Matrix &m_1, const Matrix &m_2)
         oldLabeling = labeling;
         auto k = oldLabeling.size();
         // Expand the vectors for sources
-        for (unsigned i = 0; i < sources_1.size(); ++i) {
-            // The first element is the vertex label from the last iteration
-            sources_1[i].resize((k << 1) + 1, 0); // 2k + 1
-            sources_1[i][0] = labels_1[i];
-            int label = -1;
-            for (int outNeighborIndex: outNeighbors_1[i]) {
-                // Firstly out
-                label = labels_1[outNeighborIndex];
-                ++sources_1[i][label + 1];
-            }
-            for (int inNeighborIndex: inNeighbors_1[i]) {
-                // Then inNeighbors
-                label = labels_1[inNeighborIndex];
-                ++sources_1[i][label + 1 + k];
-            }
-        }
-        for (unsigned i = 0; i < sources_2.size(); ++i) {
-            sources_2[i].resize((k << 1) + 1, 0);
-            sources_2[i][0] = labels_2[i];
-            int label = -1;
-            for (int outNeighborIndex: outNeighbors_2[i]) {
-                label = labels_2[outNeighborIndex];
-                ++sources_2[i][label + 1];
-            }
-            for (int inNeighborIndex: inNeighbors_2[i]) {
-                label = labels_2[inNeighborIndex];
-                ++sources_2[i][label + k];
-            }
-        }
+        updateLabels(labels_1, k, sources_1, outNeighbors_1, inNeighbors_1);
+        updateLabels(labels_2, k, sources_2, outNeighbors_2, inNeighbors_2);
         labeling = findLabels(sources_1, sources_2); // find the next labeling
         labels_1 = assignLabels(labeling, sources_1);
         labels_2 = assignLabels(labeling, sources_2);
