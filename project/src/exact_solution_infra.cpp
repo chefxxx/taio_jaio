@@ -44,16 +44,16 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const int t_k
 
 void subgraphIsomorphismSerial(const SI_Problem &t_P, SI_State &t_state)
 {
-    if (t_state.R == t_P.v1) {
-        // procedure find or extend run
-        if (const auto isValid = checkIsomorphism(t_P.A1, t_P.A2, t_state.M)) {
-            // add M to solutions
-        }
-        else {
-            // compute extension matrix H
-        }
-        return;
-    }
+    // if (t_state.R == t_P.v1) {
+    //     // procedure find or extend run
+    //     if (const auto isValid = checkIsomorphism(t_P.A1, t_P.A2, t_state.M)) {
+    //         // add M to solutions
+    //     }
+    //     else {
+    //         // compute extension matrix H
+    //     }
+    //     return;
+    // }
 
     for (size_t i = 0; i < t_state.cols.size(); ++i) {
         if (!t_state.cols[i]) {
