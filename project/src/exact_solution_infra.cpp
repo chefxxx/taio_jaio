@@ -84,18 +84,4 @@ void subgraphIsomorphismSerial(const SI_Problem                                 
     }
 }
 
-bool checkIsomorphism(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M)
-{
-    const auto A1prim = t_M * t_A2 * t_M.transpose();
-    return (t_A1.array() <= A1prim.array()).all();
-}
 
-Matrix computeSubgraphFromMapping(const Matrix &t_A1, const Matrix &t_M) { return t_M.transpose() * t_A1 * t_M; }
-
-Matrix computeExtension(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M)
-{
-    auto A2prim = computeSubgraphFromMapping(t_A1, t_M);
-    A2prim -= t_A2;
-    A2prim = A2prim.cwiseMax(0);
-    return A2prim;
-}

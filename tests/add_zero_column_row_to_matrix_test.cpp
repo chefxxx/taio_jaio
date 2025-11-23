@@ -16,7 +16,7 @@ public:
 
 TEST_F(AddZeroColumnAndZeroRowToMatrix, add_column_and_row_to_normal_matrix)
 {
-    auto test_matrix = addZeroColumnAndZeroRowToMatrix(A1);
+    auto test_matrix = addZeroColumnAndZeroRowToMatrix(A1.cast<double>());
 
     Matrix exact_result = Matrix{{0, 0, 0, 0, 0, 0},
                                     {0, 1, 2, 3, 4, 1},
@@ -31,7 +31,7 @@ TEST_F(AddZeroColumnAndZeroRowToMatrix, add_column_and_row_to_normal_matrix)
 
 TEST_F(AddZeroColumnAndZeroRowToMatrix, add_column_and_row_to_empty_matrix)
 {
-    auto test_matrix = addZeroColumnAndZeroRowToMatrix(A2);
+    auto test_matrix = addZeroColumnAndZeroRowToMatrix(A2.cast<double>());
 
     Matrix exact_result = Matrix{{0}};
 

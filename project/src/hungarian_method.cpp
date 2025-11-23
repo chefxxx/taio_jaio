@@ -7,8 +7,9 @@
 // mapped to the vertex j from V2
 Matrix hungarianMethod(const Eigen::MatrixXd &arg)
 {
-    int n = arg.rows() - 1;
-    int m = arg.cols() - 1;
+    auto expandedMatrix = addZeroColumnAndZeroRowToMatrix(arg);
+    int n = arg.rows();
+    int m = arg.cols();
     std::vector u(n + 1, 0);
     std::vector v(m + 1, 0);
 
@@ -26,7 +27,7 @@ Matrix hungarianMethod(const Eigen::MatrixXd &arg)
             int j_1 = -1;
             for (int j = 1; j <= m; ++j) {
                 if (!used[j]) {
-                    double cur = arg(i_0, j) - u[i_0] - v[j];
+                    double cur = expandedMatrix(i_0, j) - u[i_0] - v[j];
                     if (cur < minv[j]) {
                         minv[j] = cur;
                         way[j] = j_0;

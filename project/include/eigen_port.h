@@ -41,15 +41,15 @@ inline std::vector<int> getNumberOfInNeighbors(Matrix const& m)
 }
 
 
-inline Matrix addZeroColumnAndZeroRowToMatrix(const Matrix &m)
+inline Eigen::MatrixXd addZeroColumnAndZeroRowToMatrix(const Eigen::MatrixXd &m)
 {
     int oldN = m.rows();
     int oldM = m.cols();
-    Matrix res(oldN + 1, oldM + 1);
+    Eigen::MatrixXd res(oldN + 1, oldM + 1);
     for (int j = 0; j < oldM + 1; ++j)
-        res(0, j) = 0;
+        res(0, j) = 0.0;
     for (int i = 1; i < oldN + 1; ++i) {
-        res(i, 0) = 0;
+        res(i, 0) = 0.0;
         for (int j = 1; j < oldM + 1; ++j) {
             res(i, j) = m(i - 1, j - 1);
         }
@@ -80,5 +80,21 @@ inline std::vector<int> getVectorOfMappingsFromMatrix(const Matrix &mapping)
         }
     }
     return res;
+}
+
+inline bool checkIsomorphism(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M)
+{
+    const auto A1prim = t_M * t_A2 * t_M.transpose();
+    return (t_A1.array() <= A1prim.array()).all();
+}
+
+inline Matrix computeSubgraphFromMapping(const Matrix &t_A1, const Matrix &t_M) { return t_M.transpose() * t_A1 * t_M; }
+
+inline Matrix computeExtension(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M)
+{
+    auto A2prim = computeSubgraphFromMapping(t_A1, t_M);
+    A2prim -= t_A2;
+    A2prim = A2prim.cwiseMax(0);
+    return A2prim;
 }
 #endif // EIGEN_PORT_H
