@@ -3,6 +3,6 @@
 
 #include "eigen_port.h"
 
-Matrix hungarianMethod(const Matrix &arg);
+Matrix hungarianMethod(const Eigen::MatrixXd &arg);
 
 #endif // TAIO_PROJECT_HUNGARIAN_METHOD_H

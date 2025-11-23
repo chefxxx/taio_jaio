@@ -5,7 +5,7 @@
 // v - potentials for vertices from the V2
 // p - the vector where each element corresponds to the mapping vertex from the V1 to V2 p[j] - vertex from V1 that is
 // mapped to the vertex j from V2
-Matrix hungarianMethod(const Matrix &arg)
+Matrix hungarianMethod(const Eigen::MatrixXd &arg)
 {
     int n = arg.rows() - 1;
     int m = arg.cols() - 1;
@@ -17,16 +17,16 @@ Matrix hungarianMethod(const Matrix &arg)
     for (int i = 1; i <= n; ++i) {
         p[0] = i;
         int j_0 = 0;
-        std::vector minv(m + 1, INT_MAX);
+        std::vector minv(m + 1, std::numeric_limits<double>::max());
         std::vector used(m + 1, false);
         do {
             used[j_0] = true;
             int i_0 = p[j_0];
-            int delta = INT_MAX;
+            double delta = std::numeric_limits<double>::max();
             int j_1 = -1;
             for (int j = 1; j <= m; ++j) {
                 if (!used[j]) {
-                    int cur = arg(i_0, j) - u[i_0] - v[j];
+                    double cur = arg(i_0, j) - u[i_0] - v[j];
                     if (cur < minv[j]) {
                         minv[j] = cur;
                         way[j] = j_0;

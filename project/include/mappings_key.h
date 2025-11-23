@@ -33,11 +33,11 @@ template <> struct std::hash<BitVecKey>
 {
     size_t operator()(const BitVecKey &t_key) const noexcept
     {
-        size_t hash = 0;
+        size_t hashValue = 0;
         for (const bool b : t_key.bits) {
-            hash_combine(hash, b ? 1 : 0);
+            hash_combine(hashValue, b ? 1 : 0);
         }
-        return hash;
+        return hashValue;
     }
 };
 

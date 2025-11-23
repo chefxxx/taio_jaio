@@ -24,7 +24,7 @@ public:
 TEST_F(HungarianMethodTest, square_matrix_hungarian_method)
 {
     Matrix extended = addZeroColumnAndZeroRowToMatrix(A1);
-    Matrix test = hungarianMethod(extended);
+    Matrix test = hungarianMethod(extended.cast<double>());
 
     Matrix result{{1, 0, 0},
                     {0, 0, 1},
@@ -38,7 +38,7 @@ TEST_F(HungarianMethodTest, square_matrix_hungarian_method)
 TEST_F(HungarianMethodTest, rectangle_matrix_hungarian_method)
 {
     Matrix extended = addZeroColumnAndZeroRowToMatrix(A2);
-    Matrix test = hungarianMethod(extended);
+    Matrix test = hungarianMethod(extended.cast<double>());
 
     Matrix result {{1, 0, 0, 0},
                     {0, 0, 1, 0},
@@ -52,7 +52,7 @@ TEST_F(HungarianMethodTest, rectangle_matrix_hungarian_method)
 TEST_F(HungarianMethodTest, tricky_rectangle_matrix_hungarian_method)
 {
     Matrix extended = addZeroColumnAndZeroRowToMatrix(A3);
-    Matrix test = hungarianMethod(extended);
+    Matrix test = hungarianMethod(extended.cast<double>());
 
     Matrix result {{1, 0, 0, 0, 0},
                     {0, 1, 0, 0, 0},

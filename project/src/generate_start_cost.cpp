@@ -5,19 +5,6 @@
 #include <map>
 
 
-std::vector<std::vector<int>> fillNeighborsStructure(const Matrix &m,
-    const std::function<std::vector<int>(Matrix, int)> &f)
-{
-    auto s = m.rows();
-    std::vector<std::vector<int>> res = std::vector<std::vector<int>>();
-    res.reserve(s);
-    for (int i = 0; i < s; ++i) {
-        res[i] = f(m, i);
-    }
-    return res;
-}
-
-
 void fillStartSources(std::vector<std::vector<int>> &sources, const std::vector<std::vector<int>> &outNeighbors,
     const std::vector<std::vector<int>> &inNeighbors)
 {

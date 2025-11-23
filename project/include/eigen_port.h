@@ -56,4 +56,30 @@ inline Matrix addZeroColumnAndZeroRowToMatrix(const Matrix &m)
     }
     return res;
 }
+
+inline std::vector<std::vector<int>> fillNeighborsStructure(const Matrix &m,
+    const std::function<std::vector<int>(Matrix, int)> &f)
+{
+    auto s = m.rows();
+    std::vector<std::vector<int>> res = std::vector<std::vector<int>>();
+    res.reserve(s);
+    for (int i = 0; i < s; ++i) {
+        res[i] = f(m, i);
+    }
+    return res;
+}
+
+inline std::vector<int> getVectorOfMappingsFromMatrix(const Matrix &mapping)
+{
+    int n = mapping.rows();
+    int m = mapping.cols();
+    std::vector<int> res(n);
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            if (mapping(i, j) == 1)
+                res[i] = j;
+        }
+    }
+    return res;
+}
 #endif // EIGEN_PORT_H

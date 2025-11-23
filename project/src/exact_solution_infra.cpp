@@ -58,7 +58,7 @@ void subgraphIsomorphismSerial(const SI_Problem                                 
     if (t_state.R == t_P.v1) {
         // procedure find or extend run
         const auto key = BitVecKey(t_state.M);
-        if (const auto isValid = checkIsomorphism(t_P.A1, t_P.A2, t_state.M)) {
+        if (checkIsomorphism(t_P.A1, t_P.A2, t_state.M)) {
             // add M to solutions
             t_mappings.try_emplace(key, computeSubgraphFromMapping(t_P.A1, t_state.M));
         }

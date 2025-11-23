@@ -73,7 +73,7 @@ TEST_F(CalculateLabelsMappingCost, calculate_matrix_of_costs)
     Matrix test_matrix_of_costs = calculateLabelsMappingCost(labeling);
     for (int i = 0; i < test_matrix_of_costs.rows(); ++i)
         for (int j = 0; j < test_matrix_of_costs.cols(); ++j)
-            ASSERT_EQ(test_matrix_of_costs(i, j), test_matrix_of_costs(i, j));
+            ASSERT_EQ(test_matrix_of_costs(i, j), exact(i, j));
 }
 
 
