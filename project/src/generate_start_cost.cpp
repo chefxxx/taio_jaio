@@ -18,8 +18,8 @@ void fillStartSources(std::vector<std::vector<int>> &sources, const std::vector<
 std::vector<int> assignLabels(const std::map<std::vector<int>, int> &labeling,
     const std::vector<std::vector<int>> &sources)
 {
-    std::vector<int> labels;
     auto n = sources.size();
+    std::vector<int> labels(n);
     for (unsigned i = 0; i < n; ++i) {
         labels[i] = labeling.at(sources[i]);
     }
@@ -125,8 +125,7 @@ Matrix calculateLabelsMappingCost(const std::map<std::vector<int>, int> &labelin
 {
     int k = labeling.size();
     Matrix result = Matrix::Zero(k, k);
-    std::vector<int> values = std::vector<int>();
-    values.reserve(k);
+    std::vector<int> values = std::vector<int>(k);
     std::transform(labeling.begin(), labeling.end(), std::back_inserter(values),
         [](const auto &entry){return entry.second;});
     for (const auto &labelFrom: labeling) {

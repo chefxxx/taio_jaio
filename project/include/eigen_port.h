@@ -61,8 +61,7 @@ inline std::vector<std::vector<int>> fillNeighborsStructure(const Matrix &m,
     const std::function<std::vector<int>(Matrix, int)> &f)
 {
     auto s = m.rows();
-    std::vector<std::vector<int>> res = std::vector<std::vector<int>>();
-    res.reserve(s);
+    std::vector<std::vector<int>> res = std::vector<std::vector<int>>(s);
     for (int i = 0; i < s; ++i) {
         res[i] = f(m, i);
     }
