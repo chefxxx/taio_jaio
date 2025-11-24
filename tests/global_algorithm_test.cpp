@@ -29,20 +29,17 @@ TEST(ExactSolutionTest, smallGraphs)
     // run
     subgraphIsomorphismSerial(globalState, initState, mappings, extensions);
 
+    // check if sizes match
+    // TODO: add check for extensions
     ASSERT_EQ(mappings.size(), 1);
+
     const auto expectedMapping  = Matrix{{{0, 0, 1, 0}, {0, 0, 0, 1}, {0, 1, 0, 0}}};
     const auto expectedSubgraph = Matrix{{{0, 0, 0, 0}, {0, 0, 3, 0}, {0, 0, 0, 1}, {0, 2, 0, 0}}};
     ASSERT_EQ(expectedMapping, mappings.begin()->first.M);
     ASSERT_EQ(expectedSubgraph, mappings.begin()->second);
 
+    clearExtensionsSubsetsWhereMappingExists(mappings, extensions);
+    ASSERT_FALSE(extensions.contains(mappings.begin()->first));
+
     // TODO: check if extensions are correct
-    for (const auto &[key, list] : extensions) {
-        std::cout << "For subset: ";
-        for (const auto &elem : key.bits)
-            std::cout << elem;
-        std::cout << "\n\n";
-        for (const auto &extension : list) {
-            std::cout << extension << "\n\n";
-        }
-    }
 }

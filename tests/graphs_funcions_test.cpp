@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 
 #include "eigen_port.h"
-#include "exact_solution_infra.h"
+#include "common.h"
 
 class GraphsFunctionsTest : public ::testing::Test
 {

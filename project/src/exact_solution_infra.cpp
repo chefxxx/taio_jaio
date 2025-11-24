@@ -2,13 +2,12 @@
 // Created by Mateusz Mikiciuk on 16/11/2025.
 //
 
-#include "exact_solution_infra.h"
-
 #include <spdlog/spdlog.h>
 
+#include "exact_solution_infra.h"
 #include "common.h"
 
-void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const int t_k)
+void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, size_t t_k)
 {
     spdlog::info("Preparing exact algorithm run...");
 
@@ -51,7 +50,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const int t_k
     // Return mappings when extension not needed
     // -----------------------------------------
     if (mappings.size() >= t_k) {
-        saveResultToFile(mappings);
+        // saveResultToFile(mappings);
     }
 
     // -------------------------------------
@@ -63,7 +62,6 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const int t_k
     // Find minimal extension
     // ----------------------
     const int numberOfExtensionsToFind = t_k - mappings.size();
-    computeMinimalExtension(extensions, numberOfExtensionsToFind);
 
     // ----------------------
     // Return combined result
@@ -113,25 +111,20 @@ void clearExtensionsSubsetsWhereMappingExists(const std::unordered_map<BitVecKey
         }
     }
 }
-int computeMinimalExtension(std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions,
-                            int                                                 t_numberOfExtensionsToFind)
-{
 
+void computeMinimalExtensionSerial(ME_Problem &t_P, ME_State t_state)
+{
+    if (t_state.numberOfExtensionsToFind == 0) {
+        if (t_state.local < t_P.global) {
+            t_P.global = t_state.local;
+        }
+        return;
+    }
+
+    for (int i = 0; i < t_P.subsets.size(); ++i) {
+        if (!t_state.usedKeys[i]) { // if we did not use this key (subset) yet
+
+        }
+    }
 }
 
-
-bool checkIsomorphism(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M)
-{
-    const auto A1prim = t_M * t_A2 * t_M.transpose();
-    return (t_A1.array() <= A1prim.array()).all();
-}
-
-Matrix computeSubgraphFromMapping(const Matrix &t_A1, const Matrix &t_M) { return t_M.transpose() * t_A1 * t_M; }
-
-Matrix computeExtension(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M)
-{
-    auto A2prim = computeSubgraphFromMapping(t_A1, t_M);
-    A2prim -= t_A2;
-    A2prim = A2prim.cwiseMax(0);
-    return A2prim;
-}
