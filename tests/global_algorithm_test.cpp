@@ -38,10 +38,23 @@ TEST(ExactSolutionTest, smallGraphs)
     // run
     subgraphIsomorphismSerial(globalState, initState, mappings, extensions);
 
-    // ReSharper disable once CppUseElementsView
-    for (const auto& [key, map]: mappings) {
-        std::cout << "Mapping:\n" << key.M << "\nSubgraph:\n" << map << '\n';
-    }
+    ASSERT_EQ(mappings.size(), 1);
+    const auto expectedMapping = Matrix{
+        {
+                {0, 0, 1, 0},
+                {0, 0, 0, 1},
+                {0, 1, 0, 0}
+            }};
+    const auto expectedSubgraph = Matrix{
+        {
+                {0, 0, 0, 0},
+                {0, 0, 3, 0},
+                {0, 0, 0, 1},
+                {0, 2, 0, 0}
+            }};
+    ASSERT_EQ(expectedMapping, mappings.begin()->first.M);
+    ASSERT_EQ(expectedSubgraph, mappings.begin()->second);
+
     // TODO: check if extensions are correct
     for (const auto& [key, list] : extensions) {
         std::cout << "For subset: ";
