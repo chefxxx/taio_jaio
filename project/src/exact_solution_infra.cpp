@@ -121,9 +121,12 @@ void computeMinimalExtensionSerial(ME_Problem &t_P, ME_State t_state)
         return;
     }
 
-    for (int i = 0; i < t_P.subsets.size(); ++i) {
-        if (!t_state.usedKeys[i]) { // if we did not use this key (subset) yet
+    int i = 0;
+    for (auto it = t_P.subsets.begin(); it != t_P.subsets.end(); ++it, ++i) {
+        if (!t_state.usedKeys[i]) {
+            for (const auto& extension : it->second) {
 
+            }
         }
     }
 }
