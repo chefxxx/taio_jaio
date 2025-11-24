@@ -4,7 +4,6 @@
 
 #include "exact_solution_infra.h"
 
-#include <iostream>
 #include <spdlog/spdlog.h>
 
 #include "common.h"
@@ -37,7 +36,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const int t_k
     SI_State         initState{cols, M, 0};
 
     // initialize variables which store solutions
-    std::unordered_map<BitVecKey, Matrix> mappings;
+    std::unordered_map<BitVecKey, Matrix>              mappings;
     std::unordered_map<BitVecKey, std::vector<Matrix>> extensions;
 
     // ------------------
@@ -48,6 +47,27 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const int t_k
     // TODO: clear extensions for which keys are inside mappings, this has to be done after
     // TODO: procedure subgraphIsomorphismSerial finished
 
+    // -----------------------------------------
+    // Return mappings when extension not needed
+    // -----------------------------------------
+    if (mappings.size() >= t_k) {
+        saveResultToFile(mappings);
+    }
+
+    // -------------------------------------
+    // Clear extensions where mapping exists
+    // -------------------------------------
+    clearExtensionsSubsetsWhereMappingExists(mappings, extensions);
+
+    // ----------------------
+    // Find minimal extension
+    // ----------------------
+    const int numberOfExtensionsToFind = t_k - mappings.size();
+    computeMinimalExtension(extensions, numberOfExtensionsToFind);
+
+    // ----------------------
+    // Return combined result
+    // ----------------------
 }
 
 void subgraphIsomorphismSerial(const SI_Problem                                   &t_P,
@@ -83,6 +103,22 @@ void subgraphIsomorphismSerial(const SI_Problem                                 
         }
     }
 }
+
+void clearExtensionsSubsetsWhereMappingExists(const std::unordered_map<BitVecKey, Matrix>        &t_mappings,
+                                              std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions)
+{
+    for (auto it = t_mappings.begin(); it != t_mappings.end(); ++it) { // for all subsets that have mappings
+        if (t_extensions.contains(it->first)) {
+            t_extensions.erase(it->first);
+        }
+    }
+}
+int computeMinimalExtension(std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions,
+                            int                                                 t_numberOfExtensionsToFind)
+{
+
+}
+
 
 bool checkIsomorphism(const Matrix &t_A1, const Matrix &t_A2, const Matrix &t_M)
 {

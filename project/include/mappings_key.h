@@ -10,7 +10,8 @@
 
 struct BitVecKey
 {
-    explicit BitVecKey(const Matrix &t_matrix) : M(t_matrix)
+    explicit BitVecKey(const Matrix &t_matrix)
+        : M(t_matrix)
     {
         bits = std::vector(t_matrix.cols(), false);
         for (int j = 0; j < t_matrix.cols(); ++j) {
@@ -21,7 +22,7 @@ struct BitVecKey
     bool operator==(const BitVecKey &other) const { return bits == other.bits; }
 
     std::vector<bool> bits;
-    Matrix M;
+    Matrix            M;
 };
 
 inline void hash_combine(size_t &seed, const size_t value)

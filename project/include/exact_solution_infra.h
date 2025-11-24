@@ -17,6 +17,10 @@ void   subgraphIsomorphismSerial(const SI_Problem                               
                                  SI_State                                           &t_state,
                                  std::unordered_map<BitVecKey, Matrix>              &t_mappings,
                                  std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions);
-
+void   saveResultToFile(std::unordered_map<BitVecKey, Matrix> mappings);
+void   clearExtensionsSubsetsWhereMappingExists(const std::unordered_map<BitVecKey, Matrix>        &t_mappings,
+                                                std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions);
+int    computeMinimalExtension(std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions,
+                               int                                                 t_numberOfExtensionsToFind);
 
 #endif // EXACT_SOLUTION_INFRA_H
