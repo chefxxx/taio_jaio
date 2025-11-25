@@ -2,12 +2,14 @@
 // Created by Mateusz Mikiciuk on 16/11/2025.
 //
 
-#include <spdlog/spdlog.h>
-
 #include "exact_solution_infra.h"
+
+#include <spdlog/spdlog.h>
+#include <tuple>
+
 #include "common.h"
 
-void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, size_t t_k)
+void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const size_t t_k)
 {
     spdlog::info("Preparing exact algorithm run...");
 
@@ -23,16 +25,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, size_t t_k)
     if (v2 > A2.rows())
         extendVertices(A2, v2);
 
-    // initialize matrix M
-    Matrix M(v1, v2);
-    M.setZero();
-
-    // initialize cols set
-    const std::vector<bool> cols(M.cols());
-
-    // initialize algorithm variables
-    const SI_Problem globalState{t_A1, A2};
-    SI_State         initState{cols, M, 0};
+    auto [globalState, initState] = prepareArgsForFindingMappings(v1, v2, t_A1, t_A2);
 
     // initialize variables which store solutions
     std::unordered_map<BitVecKey, Matrix>              mappings;
@@ -49,6 +42,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, size_t t_k)
     // -----------------------------------------
     if (mappings.size() >= t_k) {
         // TODO: return here mappings
+        return;
     }
 
     // -------------------------------------
@@ -59,7 +53,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, size_t t_k)
     // ----------------------
     // Find minimal extension
     // ----------------------
-    auto& [global, starting] = prepareArgsForMFindingMinimalRun(A2.rows(), mappings, extensions, t_k);
+    auto [global, starting] = prepareArgsForFindingMinimalRun(A2.rows(), mappings, extensions, t_k);
     computeMinimalExtensionSerial(global, starting);
 
     // ----------------------
@@ -76,7 +70,9 @@ void subgraphIsomorphismSerial(const SI_Problem                                 
     if (t_state.R == t_P.v1) {
         // procedure find or extend run
         const auto key = BitVecKey(t_state.M);
-        if (const auto isValid = checkIsomorphism(t_P.A1, t_P.A2, t_state.M)) {
+        // ReSharper disable once CppTooWideScope
+        const auto isValid = checkIsomorphism(t_P.A1, t_P.A2, t_state.M);
+        if (isValid) {
             // add M to solutions
             t_mappings.try_emplace(key, computeSubgraphFromMapping(t_P.A1, t_state.M));
         }
@@ -106,7 +102,7 @@ void clearExtensionsSubsetsWhereMappingExists(const std::unordered_map<BitVecKey
                                               std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions)
 {
     // ReSharper disable once CppUseElementsView
-    for (const auto& [key, matrix] : t_extensions) { // for all subsets that have mappings
+    for (const auto& [key, matrix] : t_mappings) { // for all subsets that have mappings
         if (t_extensions.contains(key)) {
             t_extensions.erase(key);
         }
@@ -137,14 +133,13 @@ void computeMinimalExtensionSerial(ME_Problem &t_P, ME_State t_state)
         }
     }
 }
-
 std::tuple<ME_Problem, ME_State>
-prepareArgsForMFindingMinimalRun(const size_t                                              t_matrixSize,
-                                 const std::unordered_map<BitVecKey, Matrix>              &t_mappings,
-                                 const std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions,
-                                 const int                                                 t_k)
+prepareArgsForFindingMinimalRun(const size_t                                              t_matrixSize,
+                                const std::unordered_map<BitVecKey, Matrix>              &t_mappings,
+                                const std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions,
+                                const size_t                                              t_k)
 {
-    const int k = t_k - t_mappings.size();
+    const size_t k = t_k - t_mappings.size();
     // prepare global state
     Matrix globMax{t_matrixSize, t_matrixSize};
     globMax.setConstant(INT_MAX);
@@ -156,4 +151,19 @@ prepareArgsForMFindingMinimalRun(const size_t                                   
     ME_State starting{k, localStarting, t_extensions.size()};
 
     return std::make_tuple(global, starting);
+}
+
+std::tuple<SI_Problem, SI_State> prepareArgsForFindingMappings(const size_t t_rows, const size_t t_cols, const Matrix &t_A1, const Matrix &t_A2)
+{
+    // initialize matrix M
+    Matrix M(t_rows, t_cols);
+    M.setZero();
+
+    // columns set
+    const std::vector<bool> cols(M.cols());
+
+    // init alg variables
+    const SI_Problem globalState{t_A1, t_A2};
+    SI_State         initState{cols, M, 0};
+    return std::make_tuple(globalState, initState);
 }
