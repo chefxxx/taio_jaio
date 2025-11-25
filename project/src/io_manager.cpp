@@ -5,6 +5,7 @@
 #include "io_manager.h"
 
 #include <fstream>
+#include <iostream>
 #include <spdlog/spdlog.h>
 #include <tuple>
 
@@ -42,4 +43,65 @@ Matrix convertToMatrix(std::ifstream &inputFile)
         }
     }
     return a;
+}
+
+void printMatricesAfterAlgorithm(const Matrix &originalMatrix, const Matrix &updatedMatrix)
+{
+    static const std::string COLOR_YELLOW = "\033[93m";
+    static const std::string COLOR_RESET = "\033[0m";
+    int oldN = originalMatrix.rows();
+    int oldM = originalMatrix.cols();
+
+    int newN = updatedMatrix.rows();
+    int newM = updatedMatrix.cols();
+
+    std::cout << "\n\n";
+
+    std::cout << "=== ORIGINAL MATRIX FOR GRAPH G2 ==="
+        << "\n\n";
+
+    // std::cout << std::setw(3) << "";
+    // for (int k = 0; k < oldM; ++k) {
+    //     std::cout << std::setw(3) << k;
+    // }
+    // std::cout << "\n";
+    // std::cout << std::setw(3) << "";
+    // for (int k = 0; k < oldM; ++k) {
+    //     std::cout << std::setw(3) << "_";
+    // }
+    // std::cout << "\n";
+    for (int i = 0; i < oldN; ++i, std::cout << "\n") {
+        for (int j = 0; j < oldM; ++j) {
+            int cost = originalMatrix(i, j);
+            std::cout << std::setw(3) << cost;
+        }
+    }
+
+    std::cout << "\n\n";
+
+    std::cout << "=== EXTENDED MATRIX FOR GRAPH G2 ==="
+        << "\n\n";
+
+    // std::cout << std::setw(3) << "";
+    // for (int k = 0; k < newM; ++k) {
+    //     std::cout << std::setw(3) << k;
+    // }
+    // std::cout << "\n";
+    // std::cout << std::setw(3) << "";
+    // for (int k = 0; k < newM; ++k) {
+    //     std::cout << std::setw(3) << "_";
+    // }
+    // std::cout << "\n";
+    for (int i = 0; i < newN; ++i, std::cout << "\n") {
+        for (int j = 0; j < newM; ++j) {
+            int cost = updatedMatrix(i, j);
+            if (cost > originalMatrix(i, j)) {
+                std::cout << COLOR_YELLOW <<std::setw(3) << cost << COLOR_RESET;
+            } else {
+                std::cout << std::setw(3) << cost;
+            }
+        }
+    }
+
+    std::cout << "\n\n";
 }

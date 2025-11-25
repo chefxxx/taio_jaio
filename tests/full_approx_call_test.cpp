@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 
 #include "approximation_algorithm.h"
-
+#include "io_manager.h"
 
 class FullApproxCall : public ::testing::Test
 {
@@ -41,16 +41,12 @@ TEST_F(FullApproxCall, check_first_pair)
 {
     auto extendedMatrix = approximationAlgorithm(G1, G2);
 
-    for (int i = 0; i < G2.rows(); ++i, printf("\n"))
-        for (int j = 0; j < G2.cols(); ++j)
-            printf("%d (%d)   ", extendedMatrix(i, j), G2(i, j));
+    printMatricesAfterAlgorithm(G2, extendedMatrix);
 }
 
 TEST_F(FullApproxCall, check_second_pair)
 {
     auto extendedMatrix = approximationAlgorithm(G3, G4);
 
-    for (int i = 0; i < G4.rows(); ++i, printf("\n"))
-        for (int j = 0; j < G4.cols(); ++j)
-            printf("%d (%d)   ", extendedMatrix(i, j), G4(i, j));
+    printMatricesAfterAlgorithm(G4, extendedMatrix);
 }
