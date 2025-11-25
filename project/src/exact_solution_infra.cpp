@@ -142,7 +142,7 @@ prepareArgsForFindingMinimalRun(const size_t                                    
     const size_t k = t_k - t_mappings.size();
     // prepare global state
     Matrix globMax{t_matrixSize, t_matrixSize};
-    globMax.setConstant(INT_MAX);
+    globMax.setConstant(10);
     ME_Problem global{globMax, t_extensions};
 
     // prepare local state
