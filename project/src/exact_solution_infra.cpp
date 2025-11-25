@@ -43,14 +43,11 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, size_t t_k)
     // ------------------
     spdlog::info("Procedure SubgraphIsomorphismSerial run...");
     subgraphIsomorphismSerial(globalState, initState, mappings, extensions);
-    // TODO: clear extensions for which keys are inside mappings, this has to be done after
-    // TODO: procedure subgraphIsomorphismSerial finished
 
     // -----------------------------------------
     // Return mappings when extension not needed
     // -----------------------------------------
     if (mappings.size() >= t_k) {
-        // saveResultToFile(mappings);
     }
 
     // -------------------------------------
@@ -105,16 +102,17 @@ void subgraphIsomorphismSerial(const SI_Problem                                 
 void clearExtensionsSubsetsWhereMappingExists(const std::unordered_map<BitVecKey, Matrix>        &t_mappings,
                                               std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions)
 {
-    for (auto it = t_mappings.begin(); it != t_mappings.end(); ++it) { // for all subsets that have mappings
-        if (t_extensions.contains(it->first)) {
-            t_extensions.erase(it->first);
+    // ReSharper disable once CppUseElementsView
+    for (const auto& [key, matrix] : t_extensions) { // for all subsets that have mappings
+        if (t_extensions.contains(key)) {
+            t_extensions.erase(key);
         }
     }
 }
 
 void computeMinimalExtensionSerial(ME_Problem &t_P, ME_State t_state)
 {
-    if (t_state.numberOfExtensionsToFind == 0) {
+    if (t_state.k == 0) {
         if (t_state.local < t_P.global) {
             t_P.global = t_state.local;
         }
@@ -124,10 +122,15 @@ void computeMinimalExtensionSerial(ME_Problem &t_P, ME_State t_state)
     int i = 0;
     for (auto it = t_P.subsets.begin(); it != t_P.subsets.end(); ++it, ++i) {
         if (!t_state.usedKeys[i]) {
-            for (const auto& extension : it->second) {
-
+            const auto newKeys = generateNewKeys(t_state.usedKeys, i);
+            for (const auto &extension : it->second) {
+                // ReSharper disable once CppTooWideScopeInitStatement
+                const auto nextLocal = extendLocal(t_state.local, extension);
+                if (nextLocal < t_P.global) {
+                    const ME_State next{newKeys, t_state.k - 1, nextLocal};
+                    computeMinimalExtensionSerial(t_P, next);
+                }
             }
         }
     }
 }
-

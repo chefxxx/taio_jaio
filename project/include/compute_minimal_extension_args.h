@@ -8,11 +8,16 @@
 #include <__compare/ordering.h>
 #include <unordered_set>
 
-#include "mappings_key.h"
 #include "eigen_port.h"
+#include "mappings_key.h"
 
 struct Extension
 {
+    explicit Extension(const Matrix &mtx)
+        : graph(mtx)
+    {
+    }
+
     Matrix graph;
 
     std::strong_ordering operator<=> (const Extension &other) const
@@ -29,20 +34,42 @@ struct Extension
     }
 };
 
+/**
+ *
+ * @param t_local type of this variable is Extension, this is our base
+ * @param t_extension type of this variable is Matrix, we extend base using this matrix
+ * @return resulting extension
+ */
+inline Extension extendLocal(const Extension &t_local, const Matrix &t_extension)
+{
+    const auto &curr   = t_local.graph;
+    const auto  result = curr.cwiseMax(t_extension).eval();
+    return Extension{result};
+}
+
+inline std::vector<bool> generateNewKeys(const std::vector<bool> &t_oldKeys, const int idx)
+{
+    auto newKeys = t_oldKeys;
+    newKeys[idx] = true;
+    return newKeys;
+}
+
 struct ME_Problem
 {
-    Extension global;
+    Extension                                          global;
     std::unordered_map<BitVecKey, std::vector<Matrix>> subsets;
 };
 
 struct ME_State
 {
     ME_State(const std::vector<bool> &t_keys, const int t_numberOfExtensionsToFind, const Extension &t_extension)
-    :     numberOfExtensionsToFind(t_numberOfExtensionsToFind)
+        : k(t_numberOfExtensionsToFind)
         , usedKeys(t_keys)
         , local(t_extension)
-    {}
-    int               numberOfExtensionsToFind;
+    {
+    }
+
+    int               k;
     std::vector<bool> usedKeys;
     Extension         local;
 };
