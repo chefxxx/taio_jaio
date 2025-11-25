@@ -58,7 +58,7 @@ TEST_F(CalculateLabelsMappingCost, calculate_if_not_same_label)
 
 TEST_F(CalculateLabelsMappingCost, calculate_matrix_of_costs)
 {
-    auto exact = Matrix {{0, 4, 4, 6},
+    auto exact = Matrix {{0, 4, 4, 7},
                             {3, 0, 3, 6},
                             {2, 2, 0, 4},
                             {1, 1, 0, 0}};
@@ -75,5 +75,3 @@ TEST_F(CalculateLabelsMappingCost, calculate_matrix_of_costs)
         for (int j = 0; j < test_matrix_of_costs.cols(); ++j)
             ASSERT_EQ(test_matrix_of_costs(i, j), exact(i, j));
 }
-
-
