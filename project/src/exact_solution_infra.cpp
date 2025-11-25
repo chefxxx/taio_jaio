@@ -48,6 +48,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, size_t t_k)
     // Return mappings when extension not needed
     // -----------------------------------------
     if (mappings.size() >= t_k) {
+        // TODO: return here mappings
     }
 
     // -------------------------------------
@@ -58,11 +59,13 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, size_t t_k)
     // ----------------------
     // Find minimal extension
     // ----------------------
-    const int numberOfExtensionsToFind = t_k - mappings.size();
+    auto& [global, starting] = prepareArgsForMFindingMinimalRun(A2.rows(), mappings, extensions, t_k);
+    computeMinimalExtensionSerial(global, starting);
 
     // ----------------------
     // Return combined result
     // ----------------------
+    // TODO: return here mappings and extension
 }
 
 void subgraphIsomorphismSerial(const SI_Problem                                   &t_P,
@@ -133,4 +136,24 @@ void computeMinimalExtensionSerial(ME_Problem &t_P, ME_State t_state)
             }
         }
     }
+}
+
+std::tuple<ME_Problem, ME_State>
+prepareArgsForMFindingMinimalRun(const size_t                                              t_matrixSize,
+                                 const std::unordered_map<BitVecKey, Matrix>              &t_mappings,
+                                 const std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions,
+                                 const int                                                 t_k)
+{
+    const int k = t_k - t_mappings.size();
+    // prepare global state
+    Matrix globMax{t_matrixSize, t_matrixSize};
+    globMax.setConstant(INT_MAX);
+    ME_Problem global{globMax, t_extensions};
+
+    // prepare local state
+    Matrix localStarting{t_matrixSize, t_matrixSize};
+    localStarting.setConstant(-1);
+    ME_State starting{k, localStarting, t_extensions.size()};
+
+    return std::make_tuple(global, starting);
 }

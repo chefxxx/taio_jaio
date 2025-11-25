@@ -47,21 +47,27 @@ inline Extension extendLocal(const Extension &t_local, const Matrix &t_extension
     return Extension{result};
 }
 
-inline std::vector<bool> generateNewKeys(const std::vector<bool> &t_oldKeys, const int idx)
+inline std::vector<bool> generateNewKeys(const std::vector<bool> &t_oldKeys, const int t_idx)
 {
     auto newKeys = t_oldKeys;
-    newKeys[idx] = true;
+    newKeys[t_idx] = true;
     return newKeys;
 }
 
 struct ME_Problem
 {
+    ME_Problem(const Matrix &t_global, const std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions) : global(t_global), subsets(t_extensions)
     Extension                                          global;
     std::unordered_map<BitVecKey, std::vector<Matrix>> subsets;
 };
 
 struct ME_State
 {
+    ME_State(const int t_numberOfExtensionsToFind, const Matrix &t_extension, const size_t t_subsetsNumber) : k(t_numberOfExtensionsToFind), local(t_extension)
+    {
+        usedKeys = std::vector(t_subsetsNumber, false);
+    }
+
     ME_State(const std::vector<bool> &t_keys, const int t_numberOfExtensionsToFind, const Extension &t_extension)
         : k(t_numberOfExtensionsToFind)
         , usedKeys(t_keys)
