@@ -2,12 +2,14 @@
 // Created by Mateusz Mikiciuk on 16/11/2025.
 //
 
-#include "exact_solution_infra.h"
-
 #include <spdlog/spdlog.h>
 #include <tuple>
 
+#include "exact_solution_infra.h"
 #include "common.h"
+
+constexpr int MAX_MULTIPLICITY = 256;
+constexpr int MIN_MULTIPLICITY = -1;
 
 void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const long t_k)
 {
@@ -25,11 +27,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const long t_
     if (v2 > A2.rows())
         extendVertices(A2, v2);
 
-    auto [SI_globalState, SI_initState] = prepareArgs_For_MinimalExtension(v1, v2, t_A1, t_A2);
-
-    // initialize variables which store solutions
-    std::unordered_map<BitVecKey, Matrix>              mappings;
-    std::unordered_map<BitVecKey, std::vector<Matrix>> extensions;
+    auto [SI_globalState, SI_initState, mappings, extensions] = prepareArgs_For_SubgraphIsomorphism(t_A1, t_A2);
 
     // ------------------
     // Run main algorithm
@@ -45,15 +43,16 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const long t_
         return;
     }
 
-    // -------------------------------------
-    // Clear extensions where mapping exists
-    // -------------------------------------
+    // ------------------------------------------------------
+    // Clear extensions where mapping exists and prepare args
+    // ------------------------------------------------------
     clearExtensionsSubsetsWhereMappingExists(mappings, extensions);
+    auto [ME_globalState, ME_initState] = prepareArgs_For_MinimalExtension(A2.rows(), mappings, extensions, t_k);
 
     // ----------------------
     // Find minimal extension
     // ----------------------
-    auto [ME_globalState, ME_initState] = prepareArgs_For_SubgraphIsomorphism(A2.rows(), mappings, extensions, t_k);
+    spdlog::info("Procedure computeMinimalExtensionSerial run...");
     computeMinimalExtensionSerial(ME_globalState, ME_initState);
 
     // ----------------------
@@ -132,32 +131,32 @@ prepareArgs_For_SubgraphIsomorphism(const size_t                                
                                     const std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions,
                                     const long                                                t_k)
 {
-    const size_t k = t_k - t_mappings.size();
-    // prepare global state
-    Matrix globMax{t_matrixSize, t_matrixSize};
-    globMax.setConstant(10);
-    ME_Problem global{globMax, t_extensions};
 
-    // prepare local state
+    const size_t k = t_k - t_mappings.size();
+    Matrix globMax{t_matrixSize, t_matrixSize};
+    globMax.setConstant(MAX_MULTIPLICITY);
     Matrix localStarting{t_matrixSize, t_matrixSize};
-    localStarting.setConstant(-1);
-    ME_State starting{k, localStarting, t_extensions.size()};
+    localStarting.setConstant(MIN_MULTIPLICITY);
+    const ME_State starting{k, localStarting, t_extensions.size()};
+    const ME_Problem global{globMax, t_extensions};
 
     return std::make_tuple(global, starting);
 }
 
-std::tuple<SI_Problem, SI_State>
-prepareArgs_For_MinimalExtension(const size_t t_rows, const size_t t_cols, const Matrix &t_A1, const Matrix &t_A2)
+std::tuple<SI_Problem,
+           SI_State,
+           std::unordered_map<BitVecKey, Matrix>,
+           std::unordered_map<BitVecKey, std::vector<Matrix>>>
+prepareArgs_For_SubgraphIsomorphism(const Matrix &t_A1, const Matrix &t_A2)
 {
-    // initialize matrix M
-    Matrix M(t_rows, t_cols);
+    assert(t_A1.rows() == t_A1.cols());
+    assert(t_A2.rows() == t_A2.cols());
+    Matrix M(t_A1.rows(), t_A2.rows());
     M.setZero();
-
-    // columns set
     const std::vector<bool> cols(M.cols());
-
-    // init alg variables
     const SI_Problem globalState{t_A1, t_A2};
-    SI_State         initState{cols, M, 0};
-    return std::make_tuple(globalState, initState);
+    const SI_State   initState{cols, M, 0};
+    const std::unordered_map<BitVecKey, Matrix>              mappings;
+    const std::unordered_map<BitVecKey, std::vector<Matrix>> extensions;
+    return std::make_tuple(globalState, initState, mappings, extensions);
 }

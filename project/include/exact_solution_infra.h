@@ -18,8 +18,11 @@ void computeMinimalExtensionSerial(ME_Problem &t_P, ME_State t_state);
 void clearExtensionsSubsetsWhereMappingExists(const std::unordered_map<BitVecKey, Matrix>        &t_mappings,
                                               std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions);
 
-[[nodiscard]] std::tuple<SI_Problem, SI_State>
-prepareArgs_For_MinimalExtension(size_t t_rows, size_t t_cols, const Matrix &t_A1, const Matrix &t_A2);
+[[nodiscard]] std::tuple<SI_Problem,
+                         SI_State,
+                         std::unordered_map<BitVecKey, Matrix>,
+                         std::unordered_map<BitVecKey, std::vector<Matrix>>>
+prepareArgs_For_SubgraphIsomorphism(const Matrix &t_A1, const Matrix &t_A2);
 
 void subgraphIsomorphismSerial(const SI_Problem                                   &t_P,
                                SI_State                                           &t_state,
@@ -27,7 +30,7 @@ void subgraphIsomorphismSerial(const SI_Problem                                 
                                std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions);
 
 [[nodiscard]] std::tuple<ME_Problem, ME_State>
-prepareArgs_For_SubgraphIsomorphism(size_t                                                    t_matrixSize,
+prepareArgs_For_MinimalExtension(size_t                                                    t_matrixSize,
                                     const std::unordered_map<BitVecKey, Matrix>              &t_mappings,
                                     const std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions,
                                     long                                                      t_k);
