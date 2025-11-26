@@ -5,6 +5,7 @@
 #ifndef COMPUTE_MINIMAL_EXTENSION_ARGS_H
 #define COMPUTE_MINIMAL_EXTENSION_ARGS_H
 
+
 #include "eigen_port.h"
 #include "mappings_key.h"
 
@@ -17,7 +18,7 @@ struct Extension
 
     Matrix graph;
 
-    std::strong_ordering operator<= > (const Extension &other) const
+    std::strong_ordering operator<=> (const Extension &other) const
     {
         const long edgesCurrent = graph.sum();
         const long edgesOther   = other.graph.sum();

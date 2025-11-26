@@ -2,11 +2,9 @@
 // Created by Mateusz Mikiciuk on 16/11/2025.
 //
 
-#include "exact_solution_infra.h"
-
 #include <spdlog/spdlog.h>
-#include <tuple>
 
+#include "exact_solution_infra.h"
 #include "common.h"
 
 constexpr int MAX_MULTIPLICITY = 256;
