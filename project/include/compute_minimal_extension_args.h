@@ -54,13 +54,14 @@ inline std::vector<bool> generateNewKeys(const std::vector<bool> &t_oldKeys, con
 
 struct ME_Problem
 {
-    ME_Problem(const Matrix &t_global, const std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions)
+    ME_Problem(const Matrix &t_global, const std::unordered_map<BitVecKey, std::vector<std::tuple<Matrix, Matrix>>> &t_extensions)
         : global(t_global)
         , subsets(t_extensions)
     {
     }
-    Extension                                          global;
-    std::unordered_map<BitVecKey, std::vector<Matrix>> subsets;
+    Extension global;
+    std::unordered_map<BitVecKey, std::vector<std::tuple<Matrix, Matrix>>> subsets;
+    std::vector<Matrix> mappings;
 };
 
 struct ME_State
@@ -72,16 +73,19 @@ struct ME_State
         usedKeys = std::vector(t_subsetsNumber, false);
     }
 
-    ME_State(const std::vector<bool> &t_keys, const size_t t_numberOfExtensionsToFind, const Extension &t_extension)
+    ME_State(const std::vector<bool> &t_keys, const size_t t_numberOfExtensionsToFind, const Extension &t_extension, const std::vector<Matrix> &t_nMaps)
         : k(t_numberOfExtensionsToFind)
         , usedKeys(t_keys)
         , local(t_extension)
+        , mappings(t_nMaps)
     {
     }
 
-    size_t            k;
-    std::vector<bool> usedKeys;
-    Extension         local;
+    size_t              k;
+    std::vector<bool>   usedKeys;
+    Extension           local;
+    std::vector<Matrix> mappings;
+
 };
 
 #endif // COMPUTE_MINIMAL_EXTENSION_ARGS_H

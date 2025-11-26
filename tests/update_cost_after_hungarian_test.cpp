@@ -43,18 +43,18 @@ public:
 TEST_F (UpdateCostAfterHungarianTest, update_costs_after_all_flow_square_matrix)
 {
     auto startCost = generateStartCost(G1, G2);
-    auto startMapping = hungarianMethod(startCost.cast<double>());
+    auto startMapping = hungarianMethod(startCost.cast<double>().eval());
     auto mappingVector = getVectorOfMappingsFromMatrix(startMapping);
-    auto updatedCost = upgradeCostFunction(startCost.cast<double>(), mappingVector, G1, G2);
-    auto updatedMapping = hungarianMethod(updatedCost.cast<double>());
+    auto updatedCost = upgradeCostFunction(startCost.cast<double>().eval(), mappingVector, G1, G2);
+    auto updatedMapping = hungarianMethod(updatedCost.cast<double>().eval());
 }
 
 TEST_F (UpdateCostAfterHungarianTest, update_costs_after_all_flow_rect_matrix)
 {
     auto startCost = generateStartCost(G3, G4);
-    auto startMapping = hungarianMethod(startCost.cast<double>());
+    auto startMapping = hungarianMethod(startCost.cast<double>().eval());
     auto mappingVector = getVectorOfMappingsFromMatrix(startMapping);
-    auto updatedCost = upgradeCostFunction(startCost.cast<double>(), mappingVector, G1, G2);
-    auto updatedMapping = hungarianMethod(updatedCost.cast<double>());
+    auto updatedCost = upgradeCostFunction(startCost.cast<double>().eval(), mappingVector, G1, G2);
+    auto updatedMapping = hungarianMethod(updatedCost.cast<double>().eval());
     auto updatedMappingVector = getVectorOfMappingsFromMatrix(updatedMapping);
 }

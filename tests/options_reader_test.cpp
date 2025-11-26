@@ -1,10 +1,10 @@
 //
 // Created by mshamrai on 11/25/25.
 //
+
 #include <gtest/gtest.h>
 #include <vector>
 #include <string>
-#include <algorithm>
 
 #include "options_reader.h"
 
@@ -26,7 +26,7 @@ protected:
     void callGetAllParameters(const std::vector<std::string>& args) {
         std::vector<const char*> argv;
 
-        argv.push_back(const_cast<char*>("program_name"));
+        argv.push_back("program_name");
         for (const auto& arg : args) {
             argv.push_back(arg.data());
         }

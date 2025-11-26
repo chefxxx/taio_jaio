@@ -2,12 +2,14 @@
 // Created by Mateusz Mikiciuk on 16/11/2025.
 //
 
+#include "io_manager.h"
+
+#include <exact_solution_infra.h>
 #include <fstream>
 #include <iostream>
 #include <spdlog/spdlog.h>
 #include <tuple>
 
-#include "io_manager.h"
 #include "common.h"
 
 std::tuple<Matrix, Matrix> parseInputFile(const std::string_view t_inputFileName)
@@ -82,6 +84,12 @@ void printMatricesAfterAlgorithm(const Matrix  &t_originalMatrix,
     const int newM = t_updatedMatrix.cols();
 
     spdlog::info("Printing extensions result...");
+
+    const int dist = computeDistance(t_originalMatrix, t_updatedMatrix);
+    dualPrint("The distance between G2 and its extension: ", t_outputFile);
+    dualPrint(fmt::format("{}", dist), t_outputFile, 0, true);
+    dualPrint("\n", t_outputFile);
+
     dualPrint("\n=== ORIGINAL MATRIX FOR GRAPH G2 ===\n", t_outputFile);
 
     for (int i = 0; i < oldN; ++i, dualPrint("\n", t_outputFile)) {
@@ -110,6 +118,7 @@ void printMatricesAfterAlgorithm(const Matrix  &t_originalMatrix,
 void printMultipleMappings(const std::vector<Matrix> &t_mappings, const int t_number, std::ofstream *t_outputFile)
 {
     spdlog::info("Printing exact mappings result...");
+    dualPrint("\n", t_outputFile);
     for (int i = 0; i < t_number; ++i) {
         const auto map = getVectorOfMappingsFromMatrix(t_mappings[i]);
         dualPrint("[", t_outputFile);
@@ -121,4 +130,5 @@ void printMultipleMappings(const std::vector<Matrix> &t_mappings, const int t_nu
         }
         dualPrint("]\n", t_outputFile);
     }
+    dualPrint("\n", t_outputFile);
 }
