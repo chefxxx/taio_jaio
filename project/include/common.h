@@ -17,7 +17,7 @@ inline long choose(const long n, const long k)
     return static_cast<long>(res + 0.01);
 }
 
-inline long completeVerticesNumber(const long t_v1, long t_v2, const int t_k)
+inline long completeVerticesNumber(const long t_v1, long t_v2, const long t_k)
 {
     while (choose(t_v2, t_v1) < t_k)
         t_v2++;

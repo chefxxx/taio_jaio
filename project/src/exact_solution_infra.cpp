@@ -9,7 +9,7 @@
 
 #include "common.h"
 
-void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const size_t t_k)
+void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const long t_k)
 {
     spdlog::info("Preparing exact algorithm run...");
 
@@ -25,7 +25,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const size_t 
     if (v2 > A2.rows())
         extendVertices(A2, v2);
 
-    auto [globalState, initState] = prepareArgsForFindingMappings(v1, v2, t_A1, t_A2);
+    auto [SI_globalState, SI_initState] = prepareArgs_For_MinimalExtension(v1, v2, t_A1, t_A2);
 
     // initialize variables which store solutions
     std::unordered_map<BitVecKey, Matrix>              mappings;
@@ -35,7 +35,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const size_t 
     // Run main algorithm
     // ------------------
     spdlog::info("Procedure SubgraphIsomorphismSerial run...");
-    subgraphIsomorphismSerial(globalState, initState, mappings, extensions);
+    subgraphIsomorphismSerial(SI_globalState, SI_initState, mappings, extensions);
 
     // -----------------------------------------
     // Return mappings when extension not needed
@@ -53,8 +53,8 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const size_t 
     // ----------------------
     // Find minimal extension
     // ----------------------
-    auto [global, starting] = prepareArgsForFindingMinimalRun(A2.rows(), mappings, extensions, t_k);
-    computeMinimalExtensionSerial(global, starting);
+    auto [ME_globalState, ME_initState] = prepareArgs_For_SubgraphIsomorphism(A2.rows(), mappings, extensions, t_k);
+    computeMinimalExtensionSerial(ME_globalState, ME_initState);
 
     // ----------------------
     // Return combined result
@@ -68,16 +68,13 @@ void subgraphIsomorphismSerial(const SI_Problem                                 
                                std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions)
 {
     if (t_state.R == t_P.v1) {
-        // procedure find or extend run
         const auto key = BitVecKey(t_state.M);
         // ReSharper disable once CppTooWideScope
         const auto isValid = checkIsomorphism(t_P.A1, t_P.A2, t_state.M);
         if (isValid) {
-            // add M to solutions
             t_mappings.try_emplace(key, computeSubgraphFromMapping(t_P.A1, t_state.M));
         }
         else {
-            // compute extension matrix H and add it to extensions
             if (!t_extensions.contains(key)) {
                 t_extensions[key] = {};
             }
@@ -88,11 +85,8 @@ void subgraphIsomorphismSerial(const SI_Problem                                 
 
     for (size_t i = 0; i < t_state.cols.size(); ++i) {
         if (!t_state.cols[i]) {
-            // init new state
             t_state.serialNextState(i);
-            // recurse
             subgraphIsomorphismSerial(t_P, t_state, t_mappings, t_extensions);
-            // back to state
             t_state.serialPrevState(i);
         }
     }
@@ -102,7 +96,7 @@ void clearExtensionsSubsetsWhereMappingExists(const std::unordered_map<BitVecKey
                                               std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions)
 {
     // ReSharper disable once CppUseElementsView
-    for (const auto& [key, matrix] : t_mappings) { // for all subsets that have mappings
+    for (const auto &[key, matrix] : t_mappings) { // for all subsets that have mappings
         if (t_extensions.contains(key)) {
             t_extensions.erase(key);
         }
@@ -133,11 +127,12 @@ void computeMinimalExtensionSerial(ME_Problem &t_P, ME_State t_state)
         }
     }
 }
+
 std::tuple<ME_Problem, ME_State>
-prepareArgsForFindingMinimalRun(const size_t                                              t_matrixSize,
-                                const std::unordered_map<BitVecKey, Matrix>              &t_mappings,
-                                const std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions,
-                                const size_t                                              t_k)
+prepareArgs_For_SubgraphIsomorphism(const size_t                                              t_matrixSize,
+                                    const std::unordered_map<BitVecKey, Matrix>              &t_mappings,
+                                    const std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions,
+                                    const long                                                t_k)
 {
     const size_t k = t_k - t_mappings.size();
     // prepare global state
@@ -153,7 +148,8 @@ prepareArgsForFindingMinimalRun(const size_t                                    
     return std::make_tuple(global, starting);
 }
 
-std::tuple<SI_Problem, SI_State> prepareArgsForFindingMappings(const size_t t_rows, const size_t t_cols, const Matrix &t_A1, const Matrix &t_A2)
+std::tuple<SI_Problem, SI_State>
+prepareArgs_For_MinimalExtension(const size_t t_rows, const size_t t_cols, const Matrix &t_A1, const Matrix &t_A2)
 {
     // initialize matrix M
     Matrix M(t_rows, t_cols);

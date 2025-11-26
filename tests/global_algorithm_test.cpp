@@ -46,22 +46,10 @@ TEST(ExactSolutionTest, smallGraphs)
 
 TEST(ExactSolutionTest, smallGraphsExtensionTest)
 {
-    const auto A1 = Matrix{
-        {
-            {0, 1, 0},
-            {0, 0, 1},
-            {1, 0, 0}
-        }};
-    const auto A2 = Matrix{
-        {
-            {0, 0, 0, 0, 0},
-            {1, 0, 0, 1, 0},
-            {0, 1, 0, 0, 0},
-            {0, 0, 0, 0, 1},
-            {0, 1, 0, 0, 0}
-        }};
+    const auto A1 = Matrix{{{0, 1, 0}, {0, 0, 1}, {1, 0, 0}}};
+    const auto A2 = Matrix{{{0, 0, 0, 0, 0}, {1, 0, 0, 1, 0}, {0, 1, 0, 0, 0}, {0, 0, 0, 0, 1}, {0, 1, 0, 0, 0}}};
 
-    auto [globalState, initState] = prepareArgsForFindingMappings(A1.rows(), A2.rows(), A1, A2);
+    auto [globalState, initState] = prepareArgs_For_MinimalExtension(A1.rows(), A2.rows(), A1, A2);
 
     // variables to store results of computation
     std::unordered_map<BitVecKey, Matrix>              mappings;
@@ -73,43 +61,28 @@ TEST(ExactSolutionTest, smallGraphsExtensionTest)
     // just sanity check
     ASSERT_EQ(mappings.size(), 1);
 
-    auto [globalStateMinAlg, startingState] = prepareArgsForFindingMinimalRun(A2.rows(), mappings, extensions, 3);
+    auto [globalStateMinAlg, startingState] = prepareArgs_For_SubgraphIsomorphism(A2.rows(), mappings, extensions, 3);
     computeMinimalExtensionSerial(globalStateMinAlg, startingState);
 
-    auto expected = Matrix
-        {
-            {0, 0, 1, 0, 0},
-            {0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0},
-            {0, 0, 1, 0, 0},
-            {0, 0, 0, 0, 0}
-        };
+    auto expected = Matrix{{0, 0, 1, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 1, 0, 0}, {0, 0, 0, 0, 0}};
 
     ASSERT_EQ(expected, globalStateMinAlg.global.graph);
 }
 
 TEST(ExactSolutionTest, MichalFavouriteGraphs)
 {
-    const Matrix G3 {
-            {0, 1, 1, 0, 0},
-                {1, 0, 0, 1, 0},
-                {1, 0, 0, 1, 1},
-                {0, 1, 1, 0, 1},
-                {0, 0, 1, 1, 0}
-    };
+    const Matrix G3{{0, 1, 1, 0, 0}, {1, 0, 0, 1, 0}, {1, 0, 0, 1, 1}, {0, 1, 1, 0, 1}, {0, 0, 1, 1, 0}};
 
-    const Matrix G4 {
-            {0, 1, 0, 1, 0, 0, 0, 0},
-                {1, 0, 1, 0, 0, 0, 0, 0},
-                {0, 1, 0, 1, 0, 1, 0, 0},
-                {1, 0, 1, 0, 1, 0, 1, 0},
-                {0, 0, 0, 1, 0, 0, 0, 1},
-                {0, 0, 1 ,0, 0, 0, 1, 0},
-                {0, 0, 0, 1, 0, 1, 0, 1},
-                {0, 0, 0, 0, 1, 0, 1, 0}
-    };
+    const Matrix G4{{0, 1, 0, 1, 0, 0, 0, 0},
+                    {1, 0, 1, 0, 0, 0, 0, 0},
+                    {0, 1, 0, 1, 0, 1, 0, 0},
+                    {1, 0, 1, 0, 1, 0, 1, 0},
+                    {0, 0, 0, 1, 0, 0, 0, 1},
+                    {0, 0, 1, 0, 0, 0, 1, 0},
+                    {0, 0, 0, 1, 0, 1, 0, 1},
+                    {0, 0, 0, 0, 1, 0, 1, 0}};
 
-    auto [globalState, initState] = prepareArgsForFindingMappings(G3.rows(), G4.rows(), G3, G4);
+    auto [globalState, initState] = prepareArgs_For_MinimalExtension(G3.rows(), G4.rows(), G3, G4);
 
     // variables to store results of computation
     std::unordered_map<BitVecKey, Matrix>              mappings;
@@ -121,7 +94,7 @@ TEST(ExactSolutionTest, MichalFavouriteGraphs)
     // just sanity check
     ASSERT_EQ(mappings.size(), 0);
 
-    auto [globalStateMinAlg, startingState] = prepareArgsForFindingMinimalRun(G4.rows(), mappings, extensions, 1);
+    auto [globalStateMinAlg, startingState] = prepareArgs_For_SubgraphIsomorphism(G4.rows(), mappings, extensions, 1);
     computeMinimalExtensionSerial(globalStateMinAlg, startingState);
 
     std::cout << globalStateMinAlg.global.graph << '\n';
