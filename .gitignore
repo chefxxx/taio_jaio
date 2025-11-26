@@ -271,3 +271,56 @@ Temporary Items
 .idea
 
 .devnotes
+
+# Visual Studio CMake / MSVC
+.vs/
+CMakeSettings.json
+CMakeOutput.log
+CMakeConfigureLog.yaml
+CMakeUserPresets.json
+
+# Visual Studio build dirs
+Debug/
+Release/
+RelWithDebInfo/
+MinSizeRel/
+x64/
+x86/
+ARM/
+ARM64/
+
+# MSBuild intermediates
+*.tlog
+*.lastbuildstate
+*.log
+*.cache
+*.db
+*.ilk
+*.iobj
+*.ipdb
+*.pdb
+*.idb
+*.obj.enc
+*.exe.recipe
+*.dll.recipe
+*.vcxproj.user
+
+
+# Visual Studio profiling & diagnostics
+*.psess
+*.vsp
+*.vspx
+*.vspscc
+*.nvuser
+*.nvraw
+*.nvm
+
+# Test output
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# Crash dumps
+*.mdmp
+*.dmp

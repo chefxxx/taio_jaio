@@ -119,6 +119,7 @@ void printMultipleMappings(const std::vector<Matrix> &t_mappings, const int t_nu
 {
     spdlog::info("Printing exact mappings result...");
     dualPrint("\n", t_outputFile);
+    dualPrint("=== MAPPINGS FOR EXTENDED G2 ===\n", t_outputFile);
     for (int i = 0; i < t_number; ++i) {
         const auto map = getVectorOfMappingsFromMatrix(t_mappings[i]);
         dualPrint("[", t_outputFile);
