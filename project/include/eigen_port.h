@@ -68,18 +68,6 @@ inline std::vector<std::vector<int>> fillNeighborsStructure(const Matrix &m,
     return res;
 }
 
-inline std::vector<int> getVectorOfMappingsFromMatrix(const Matrix &mapping)
-{
-    int n = mapping.rows();
-    int m = mapping.cols();
-    std::vector<int> res(n);
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < m; ++j) {
-            if (mapping(i, j) == 1)
-                res[i] = j;
-        }
-    }
-    return res;
-}
+
 
 #endif // EIGEN_PORT_H

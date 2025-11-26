@@ -32,7 +32,7 @@ protected:
         }
         argv.push_back(nullptr);
 
-        int argc = static_cast<int>(argv.size()) - 1;
+        const int argc = static_cast<int>(argv.size()) - 1;
 
         getAllParameters(inFile, outFile, algType, k, argc, argv.data());
     }

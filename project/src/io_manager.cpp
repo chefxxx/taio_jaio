@@ -2,12 +2,13 @@
 // Created by Mateusz Mikiciuk on 16/11/2025.
 //
 
-#include "io_manager.h"
-
 #include <fstream>
 #include <iostream>
 #include <spdlog/spdlog.h>
 #include <tuple>
+
+#include "io_manager.h"
+#include "common.h"
 
 std::tuple<Matrix, Matrix> parseInputFile(const std::string_view t_inputFileName)
 {
@@ -59,12 +60,13 @@ Matrix convertToMatrix(std::ifstream &inputFile, int& lineNumber)
 
 void printMatricesAfterAlgorithm(const Matrix &originalMatrix, const Matrix &updatedMatrix)
 {
+    spdlog::info("Printing extension result...\n");
     static const std::string COLOR_YELLOW = "\033[93m";
-    static const std::string COLOR_RESET = "\033[0m";
-    const int oldN = originalMatrix.rows();
-    const int oldM = originalMatrix.cols();
-    const int newN = updatedMatrix.rows();
-    const int newM = updatedMatrix.cols();
+    static const std::string COLOR_RESET  = "\033[0m";
+    const int                oldN         = originalMatrix.rows();
+    const int                oldM         = originalMatrix.cols();
+    const int                newN         = updatedMatrix.rows();
+    const int                newM         = updatedMatrix.cols();
 
     std::cout << "\n\n=== ORIGINAL MATRIX FOR GRAPH G2 ===\n\n";
     for (int i = 0; i < oldN; ++i, std::cout << "\n") {
@@ -80,11 +82,25 @@ void printMatricesAfterAlgorithm(const Matrix &originalMatrix, const Matrix &upd
             const int cost = updatedMatrix(i, j);
             if (cost > originalMatrix(i, j)) {
                 std::cout << COLOR_YELLOW << std::setw(3) << cost << COLOR_RESET;
-            } else {
+            }
+            else {
                 std::cout << std::setw(3) << cost;
             }
         }
     }
 
     std::cout << "\n\n";
+}
+
+void printMultipleMappings(const std::vector<Matrix> &t_mappings, const int t_number = t_mappings.size())
+{
+    spdlog::info("Printing mappings result...");
+    for (int i = 0; i < t_number; ++i) {
+        const auto map = getVectorOfMappingsFromMatrix(t_mappings[i]);
+        std::cout << "[";
+        for (int k = 0; k < map.size(); ++k) {
+            std::cout << k << ":" << map[k] << ", ";
+        }
+        std::cout << "]\n";
+    }
 }

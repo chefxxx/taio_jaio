@@ -44,7 +44,7 @@ TEST(ExactSolutionTest, smallGraphsExtensionTest)
 
     auto expected = Matrix{{0, 0, 1, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 1, 0, 0}, {0, 0, 0, 0, 0}};
 
-    ASSERT_EQ(expected, globalStateMinAlg.global.graph);
+    ASSERT_EQ(expected, globalStateMinAlg.global.matrix);
 }
 
 TEST(ExactSolutionTest, MichalFavouriteGraphs)
@@ -76,5 +76,5 @@ TEST(ExactSolutionTest, MichalFavouriteGraphs)
     auto [globalStateMinAlg, startingState] = prepareArgs_For_MinimalExtension(G4.rows(), mappings, extensions, 1);
     computeMinimalExtensionSerial(globalStateMinAlg, startingState);
 
-    std::cout << globalStateMinAlg.global.graph << '\n';
+    std::cout << globalStateMinAlg.global.matrix << '\n';
 }

@@ -5,6 +5,7 @@
 #include <spdlog/spdlog.h>
 
 #include "exact_solution_infra.h"
+#include "io_manager.h"
 #include "common.h"
 
 constexpr int MAX_MULTIPLICITY = 256;
@@ -33,12 +34,15 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const long t_
     // ------------------
     spdlog::info("Procedure SubgraphIsomorphismSerial run...");
     subgraphIsomorphismSerial(SI_globalState, SI_initState, mappings, extensions);
+    spdlog::info("Procedure SubgraphIsomorphismSerial finished...");
 
     // -----------------------------------------
     // Return mappings when extension not needed
     // -----------------------------------------
     if (mappings.size() >= static_cast<size_t>(t_k)) {
-        // TODO: return here mappings
+        const auto [maps, graphs] = convertMappingsToResult(mappings);
+        printMultipleMappings(maps, t_k);
+        //TODO: save to file
         return;
     }
 
@@ -53,11 +57,15 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const long t_
     // ----------------------
     spdlog::info("Procedure computeMinimalExtensionSerial run...");
     computeMinimalExtensionSerial(ME_globalState, ME_initState);
+    spdlog::info("Procedure computeMinimalExtensionSerial finished...");
 
     // ----------------------
     // Return combined result
     // ----------------------
-    // TODO: return here mappings and extension
+    // TODO: print mappings
+
+    printMatricesAfterAlgorithm(A2, ME_globalState.global.matrix);
+    // TODO: save to file
 }
 
 void subgraphIsomorphismSerial(const SI_Problem                                   &t_P,

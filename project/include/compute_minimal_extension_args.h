@@ -12,16 +12,16 @@
 struct Extension
 {
     explicit Extension(const Matrix &mtx)
-        : graph(mtx)
+        : matrix(mtx)
     {
     }
 
-    Matrix graph;
+    Matrix matrix;
 
     std::strong_ordering operator<=> (const Extension &other) const
     {
-        const long edgesCurrent = graph.sum();
-        const long edgesOther   = other.graph.sum();
+        const long edgesCurrent = matrix.sum();
+        const long edgesOther   = other.matrix.sum();
         if (edgesCurrent > edgesOther) {
             return std::strong_ordering::greater;
         }
@@ -40,7 +40,7 @@ struct Extension
  */
 inline Extension extendLocal(const Extension &t_local, const Matrix &t_extension)
 {
-    const auto &curr   = t_local.graph;
+    const auto &curr   = t_local.matrix;
     const auto  result = curr.cwiseMax(t_extension).eval();
     return Extension{result};
 }

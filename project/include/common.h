@@ -52,5 +52,19 @@ inline Matrix computeExtension(const Matrix &t_A1, const Matrix &t_A2, const Mat
     return A2prim;
 }
 
+[[nodiscard]] inline std::vector<int> getVectorOfMappingsFromMatrix(const Matrix &mapping)
+{
+    const int n = mapping.rows();
+    const int m = mapping.cols();
+    std::vector<int> res(n);
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            if (mapping(i, j) == 1)
+                res[i] = j;
+        }
+    }
+    return res;
+}
+
 
 #endif // COMMON_H
