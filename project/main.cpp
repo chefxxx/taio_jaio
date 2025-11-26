@@ -19,7 +19,7 @@ int main(const int argc, const char **argv)
         Usage();
     }
     const std::string fileName = argv[1];
-    const int         k        = std::stoi(argv[2]);
+    const size_t      k        = std::stoi(argv[2]);
 
     // -----------
     // Parse input

@@ -6,6 +6,7 @@
 #include "generate_start_cost.h"
 #include "hungarian_method.h"
 #include "upgrade_cost_function.h"
+#include "common.h"
 
 Matrix approximationAlgorithm(const Matrix &graph_1, const Matrix &graph_2)
 {
