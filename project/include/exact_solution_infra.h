@@ -30,12 +30,13 @@ void subgraphIsomorphismSerial(const SI_Problem                                 
                                std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions);
 
 [[nodiscard]] std::tuple<ME_Problem, ME_State>
-prepareArgs_For_MinimalExtension(size_t                                                       t_matrixSize,
-                                    const std::unordered_map<BitVecKey, Matrix>              &t_mappings,
-                                    const std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions,
-                                    long                                                      t_k);
+prepareArgs_For_MinimalExtension(size_t                                                    t_matrixSize,
+                                 const std::unordered_map<BitVecKey, Matrix>              &t_mappings,
+                                 const std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions,
+                                 long                                                      t_k);
 
 [[nodiscard]] std::tuple<std::vector<Matrix>, std::vector<Matrix>>
 convertMappingsToResult(const std::unordered_map<BitVecKey, Matrix> &t_mappings);
+int computeDistance(const Matrix &t_M1, const Matrix &t_M2);
 
 #endif // EXACT_SOLUTION_INFRA_H

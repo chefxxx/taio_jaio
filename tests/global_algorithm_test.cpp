@@ -35,11 +35,8 @@ TEST(ExactSolutionTest, smallGraphsExtensionTest)
     const auto A2 = Matrix{{{0, 0, 0, 0, 0}, {1, 0, 0, 1, 0}, {0, 1, 0, 0, 0}, {0, 0, 0, 0, 1}, {0, 1, 0, 0, 0}}};
 
     auto [globalState, initState, mappings, extensions] = prepareArgs_For_SubgraphIsomorphism(A1, A2);
-
-    // run
     subgraphIsomorphismSerial(globalState, initState, mappings, extensions);
 
-    // just sanity check
     ASSERT_EQ(mappings.size(), 1);
 
     auto [globalStateMinAlg, startingState] = prepareArgs_For_MinimalExtension(A2.rows(), mappings, extensions, 3);
@@ -52,20 +49,25 @@ TEST(ExactSolutionTest, smallGraphsExtensionTest)
 
 TEST(ExactSolutionTest, MichalFavouriteGraphs)
 {
-    const Matrix G3{{0, 1, 1, 0, 0}, {1, 0, 0, 1, 0}, {1, 0, 0, 1, 1}, {0, 1, 1, 0, 1}, {0, 0, 1, 1, 0}};
-
-    const Matrix G4{{0, 1, 0, 1, 0, 0, 0, 0},
-                    {1, 0, 1, 0, 0, 0, 0, 0},
-                    {0, 1, 0, 1, 0, 1, 0, 0},
-                    {1, 0, 1, 0, 1, 0, 1, 0},
-                    {0, 0, 0, 1, 0, 0, 0, 1},
-                    {0, 0, 1, 0, 0, 0, 1, 0},
-                    {0, 0, 0, 1, 0, 1, 0, 1},
-                    {0, 0, 0, 0, 1, 0, 1, 0}};
+    const Matrix G3{
+        {0, 1, 1, 0, 0},
+            {1, 0, 0, 1, 0},
+            {1, 0, 0, 1, 1},
+            {0, 1, 1, 0, 1},
+            {0, 0, 1, 1, 0}
+    };
+    const Matrix G4{
+        {0, 1, 0, 1, 0, 0, 0, 0},
+            {1, 0, 1, 0, 0, 0, 0, 0},
+            {0, 1, 0, 1, 0, 1, 0, 0},
+            {1, 0, 1, 0, 1, 0, 1, 0},
+            {0, 0, 0, 1, 0, 0, 0, 1},
+            {0, 0, 1, 0, 0, 0, 1, 0},
+            {0, 0, 0, 1, 0, 1, 0, 1},
+            {0, 0, 0, 0, 1, 0, 1, 0}
+    };
 
     auto [globalState, initState, mappings, extensions] = prepareArgs_For_SubgraphIsomorphism(G3, G4);
-
-    // run
     subgraphIsomorphismSerial(globalState, initState, mappings, extensions);
 
     // just sanity check

@@ -2,10 +2,11 @@
 // Created by Mateusz Mikiciuk on 16/11/2025.
 //
 
+#include "exact_solution_infra.h"
+
 #include <spdlog/spdlog.h>
 #include <tuple>
 
-#include "exact_solution_infra.h"
 #include "common.h"
 
 constexpr int MAX_MULTIPLICITY = 256;
@@ -101,6 +102,14 @@ convertMappingsToResult(const std::unordered_map<BitVecKey, Matrix> &t_mappings)
     return std::make_tuple(maps, graphs);
 }
 
+int computeDistance(const Matrix &t_M1, const Matrix &t_M2)
+{
+    // we count distance from t_M2
+    const int sum1 = t_M1.sum();
+    const int sum2 = t_M2.sum();
+    return sum2 - sum1;
+}
+
 void clearExtensionsSubsetsWhereMappingExists(const std::unordered_map<BitVecKey, Matrix>        &t_mappings,
                                               std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions)
 {
@@ -144,11 +153,11 @@ prepareArgs_For_MinimalExtension(const size_t                                   
                                  const long                                                t_k)
 {
     const size_t k = t_k - t_mappings.size();
-    Matrix globMax{t_matrixSize, t_matrixSize};
+    Matrix       globMax{t_matrixSize, t_matrixSize};
     globMax.setConstant(MAX_MULTIPLICITY);
     Matrix localStarting{t_matrixSize, t_matrixSize};
     localStarting.setConstant(MIN_MULTIPLICITY);
-    const ME_State starting{k, localStarting, t_extensions.size()};
+    const ME_State   starting{k, localStarting, t_extensions.size()};
     const ME_Problem global{globMax, t_extensions};
 
     return std::make_tuple(global, starting);
@@ -164,9 +173,9 @@ prepareArgs_For_SubgraphIsomorphism(const Matrix &t_A1, const Matrix &t_A2)
     assert(t_A2.rows() == t_A2.cols());
     Matrix M(t_A1.rows(), t_A2.rows());
     M.setZero();
-    const std::vector<bool> cols(M.cols());
-    const SI_Problem globalState{t_A1, t_A2};
-    const SI_State   initState{cols, M, 0};
+    const std::vector<bool>                                  cols(M.cols());
+    const SI_Problem                                         globalState{t_A1, t_A2};
+    const SI_State                                           initState{cols, M, 0};
     const std::unordered_map<BitVecKey, Matrix>              mappings;
     const std::unordered_map<BitVecKey, std::vector<Matrix>> extensions;
     return std::make_tuple(globalState, initState, mappings, extensions);
