@@ -10,7 +10,7 @@
 __attribute__((noreturn)) void Usage()
 {
     std::cerr << "USAGE: ./pname [-input-file </path/to/input_file.txt>] [-k=1 <number of subgraph(s) to find>] " <<
-                 "[-output-file </path/to/output_file.txt>] [-type=exact exact/approximation]";
+                 "[-output-file </path/to/output_file.txt>] [-type=exact <exact/approximation>]";
     exit(EXIT_FAILURE);
 }
 
@@ -54,7 +54,7 @@ int main(const int argc, const char **argv)
     // -------------
     if (algorithm == "exact") {
         spdlog::info("Exact solution algorithm is called...");
-        performExactAlgorithm(A1, A2, k);
+        performExactAlgorithm(A1, A2, k, &outputFile);
     }
     else if (algorithm == "approximation") {
         spdlog::info("Approximation solution algorithm is called...");

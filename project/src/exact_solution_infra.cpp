@@ -11,7 +11,7 @@
 constexpr int MAX_MULTIPLICITY = 256;
 constexpr int MIN_MULTIPLICITY = -1;
 
-void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const long t_k)
+void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const long t_k, std::ofstream *t_outputFile)
 {
     spdlog::info("Preparing exact algorithm run...");
 
@@ -41,8 +41,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const long t_
     // -----------------------------------------
     const auto [maps, graphs] = convertMappingsToResult(mappings);
     if (mappings.size() >= static_cast<size_t>(t_k)) {
-        printMultipleMappings(maps, t_k, TODO);
-        //TODO: save to file
+        printMultipleMappings(maps, t_k, t_outputFile);
         return;
     }
 
@@ -62,9 +61,9 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const long t_
     // ----------------------
     // Return combined result
     // ----------------------
-    printMultipleMappings(maps, maps.size(), TODO);
-    printMatricesAfterAlgorithm(A2, ME_globalState.global.matrix);
-    // TODO: save to file
+    printMultipleMappings(maps, maps.size(), t_outputFile);
+    const auto resExt = (A2 + ME_globalState.global.matrix).eval();
+    printMatricesAfterAlgorithm(A2, resExt, t_outputFile);
 }
 
 void subgraphIsomorphismSerial(const SI_Problem                                   &t_P,

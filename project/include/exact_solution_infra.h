@@ -12,7 +12,7 @@
 #include "mappings_key.h"
 #include "subgraph_isomorphism_args.h"
 
-void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, long t_k);
+void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, long t_k, std::ofstream *t_outputFile);
 void computeMinimalExtensionSerial(ME_Problem &t_P, ME_State t_state);
 
 void clearExtensionsSubsetsWhereMappingExists(const std::unordered_map<BitVecKey, Matrix>        &t_mappings,

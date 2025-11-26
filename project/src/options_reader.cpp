@@ -4,25 +4,26 @@
 #include "options_reader.h"
 #include <spdlog/spdlog.h>
 
+const std::string EXACT_TYPE = "exact";
+const std::string APPROX_TYPE = "approximation";
+const std::string DEFAULT_OUTPUT_FILE = "result";
+
 void getAllParameters(std::string &inFile, std::string &outFile, std::string &algType, int& k, int argc, const char **argv)
 {
-    static std::string exactType = "exact";
-    static std::string approxType = "approximation";
-    static std::string defaultOutputFile = "result.txt";
     static int defaultK = 1;
-    algType = exactType;
+    algType = EXACT_TYPE;
     k = defaultK;
-    outFile = defaultOutputFile;
+    outFile = DEFAULT_OUTPUT_FILE;
     // Which algorithm is called
     if (cmdOptionExists(argv, argv + argc, "-type"))
     {
         const char* optionString = getCmdOption(argv, argv + argc, "-type");
         std::string type = optionString;
         std::ranges::transform(type, type.begin(), ::tolower);
-        if (type == approxType) {
-            algType = approxType;
+        if (type == APPROX_TYPE) {
+            algType = APPROX_TYPE;
         }
-        else if (type != exactType) {
+        else if (type != EXACT_TYPE) {
             spdlog::warn("Wrong option type: '{}'. The default option - '{}' algorithm is called", type, algType);
         }
     }

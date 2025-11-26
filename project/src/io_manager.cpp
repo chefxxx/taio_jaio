@@ -81,7 +81,8 @@ void printMatricesAfterAlgorithm(const Matrix  &t_originalMatrix,
     const int newN = t_updatedMatrix.rows();
     const int newM = t_updatedMatrix.cols();
 
-    dualPrint("\n\n=== ORIGINAL MATRIX FOR GRAPH G2 ===\n\n", t_outputFile);
+    spdlog::info("Printing extensions result...");
+    dualPrint("\n=== ORIGINAL MATRIX FOR GRAPH G2 ===\n", t_outputFile);
 
     for (int i = 0; i < oldN; ++i, dualPrint("\n", t_outputFile)) {
         for (int j = 0; j < oldM; ++j) {
@@ -90,7 +91,7 @@ void printMatricesAfterAlgorithm(const Matrix  &t_originalMatrix,
         }
     }
 
-    dualPrint("\n\n=== EXTENDED MATRIX FOR GRAPH G2 ===\n\n", t_outputFile);
+    dualPrint("\n=== EXTENDED MATRIX FOR GRAPH G2 ===\n", t_outputFile);
 
     for (int i = 0; i < newN; ++i, dualPrint("\n", t_outputFile)) {
         for (int j = 0; j < newM; ++j) {
@@ -108,12 +109,15 @@ void printMatricesAfterAlgorithm(const Matrix  &t_originalMatrix,
 
 void printMultipleMappings(const std::vector<Matrix> &t_mappings, const int t_number, std::ofstream *t_outputFile)
 {
-    spdlog::info("Printing mappings result...");
+    spdlog::info("Printing exact mappings result...");
     for (int i = 0; i < t_number; ++i) {
         const auto map = getVectorOfMappingsFromMatrix(t_mappings[i]);
         dualPrint("[", t_outputFile);
-        for (int k = 0; k < map.size(); ++k) {
-            dualPrint(fmt::format("{}:{}, ", k, map[k]), t_outputFile);
+        for (size_t k = 0; k < map.size(); ++k) {
+            if (k < map.size() - 1)
+                dualPrint(fmt::format("{}:{}, ", k, map[k]), t_outputFile);
+            else
+                dualPrint(fmt::format("{}:{}", k, map[k]), t_outputFile);
         }
         dualPrint("]\n", t_outputFile);
     }
