@@ -92,7 +92,7 @@ void printMatricesAfterAlgorithm(const Matrix &originalMatrix, const Matrix &upd
     std::cout << "\n\n";
 }
 
-void printMultipleMappings(const std::vector<Matrix> &t_mappings, const int t_number = t_mappings.size())
+void printMultipleMappings(const std::vector<Matrix> &t_mappings, const int t_number)
 {
     spdlog::info("Printing mappings result...");
     for (int i = 0; i < t_number; ++i) {

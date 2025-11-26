@@ -13,6 +13,5 @@ std::tuple<Matrix, Matrix> parseInputFile(std::string_view t_inputFileName);
 Matrix                     convertToMatrix(std::ifstream &inputFile, int& lineNumber);
 
 void printMatricesAfterAlgorithm(const Matrix &originalMatrix, const Matrix &updatedMatrix);
-void printMultipleMappings(const std::vector<Matrix> &t_mappings, int t_number);
-
+void printMultipleMappings(const std::vector<Matrix> &t_mappings, int t_number)
 #endif // IO_MANAGER_H
