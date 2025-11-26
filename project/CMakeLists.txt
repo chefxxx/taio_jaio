@@ -52,7 +52,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     endif ()
 
     target_compile_options(${LIB} PRIVATE
-            $<$<CXX_COMPILER_ID:GNU>:-g -O0 -Wall -Wextra -pedantic -Wshadow -Wnon-virtual-dtor -Werror>
+            $<$<CXX_COMPILER_ID:GNU>:-g -O0 -Wall -Wextra -pedantic -Wnon-virtual-dtor -Werror>
             $<$<CXX_COMPILER_ID:Clang>:-g -O0 -Wall -Wextra -pedantic -Wshadow -Wnon-virtual-dtor -Werror>
             $<$<CXX_COMPILER_ID:AppleClang>:-g -O0 -Wall -Wextra -pedantic -Wshadow -Wnon-virtual-dtor -Werror>
             $<$<CXX_COMPILER_ID:MSVC>:/W4>

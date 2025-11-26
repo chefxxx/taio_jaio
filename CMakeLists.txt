@@ -12,7 +12,7 @@ set(LIB ${PROJECT_NAME}_lib)
 project(${PROJECT_NAME} LANGUAGES C CXX)
 
 set(PROJECT_VERSION "1.0")
-set(PROJECT_AUTHOR "")
+set(PROJECT_AUTHOR "Mateusz Mikiciuk & Mykhailo Shamrai")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
