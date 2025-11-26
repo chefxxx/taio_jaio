@@ -55,7 +55,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
             $<$<CXX_COMPILER_ID:GNU>:-g -O0 -Wall -Wextra -pedantic -Wnon-virtual-dtor -Werror>
             $<$<CXX_COMPILER_ID:Clang>:-g -O0 -Wall -Wextra -pedantic -Wshadow -Wnon-virtual-dtor -Werror>
             $<$<CXX_COMPILER_ID:AppleClang>:-g -O0 -Wall -Wextra -pedantic -Wshadow -Wnon-virtual-dtor -Werror>
-            $<$<CXX_COMPILER_ID:MSVC>:/W4>
+            $<$<CXX_COMPILER_ID:MSVC>:/Zi /Od /W4 /permissive- /EHsc>
     )
 
 elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
@@ -76,7 +76,7 @@ elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
             $<$<CXX_COMPILER_ID:GNU>:-O3 -march=native -funroll-loops>
             $<$<CXX_COMPILER_ID:Clang>:-O3 -march=native -funroll-loops>
             $<$<CXX_COMPILER_ID:AppleClang>:-O3 -march=native -funroll-loops>
-            $<$<CXX_COMPILER_ID:MSVC>:> 
+            $<$<CXX_COMPILER_ID:MSVC>:/O2> 
     )
 
 else()

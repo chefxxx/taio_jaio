@@ -7,7 +7,7 @@
 #include "io_manager.h"
 #include "options_reader.h"
 
-__attribute__((noreturn)) void Usage()
+[[noreturn]] void Usage()
 {
     std::cerr << "USAGE: ./pname [-input-file </path/to/input_file.txt>] [-k=1 <number of subgraph(s) to find>] " <<
                  "[-output-file </path/to/output_file.txt>] [-type=exact <exact/approximation>]";
@@ -58,8 +58,7 @@ int main(const int argc, const char **argv)
     }
     else if (algorithm == "approximation") {
         spdlog::info("Approximation solution algorithm is called...");
-        auto res = approximationAlgorithm(A1, A2);
-        printMatricesAfterAlgorithm(A2, res, &outputFile);
+        approximationAlgorithm(A1, A2, &outputFile);
     }
     return 0;
 }

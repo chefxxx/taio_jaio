@@ -7,6 +7,6 @@
 
 #include "eigen_port.h"
 
-Matrix approximationAlgorithm(const Matrix &graph_1, const Matrix &graph_2);
+void approximationAlgorithm(const Matrix &graph_1, const Matrix &graph_2, std::ofstream *outputFile);
 
 #endif // TAIO_PROJECT_APPROXIMATION_ALGORITHM_H
