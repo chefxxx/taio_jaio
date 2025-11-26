@@ -49,54 +49,25 @@ void printMatricesAfterAlgorithm(const Matrix &originalMatrix, const Matrix &upd
 {
     static const std::string COLOR_YELLOW = "\033[93m";
     static const std::string COLOR_RESET = "\033[0m";
-    int oldN = originalMatrix.rows();
-    int oldM = originalMatrix.cols();
+    const int oldN = originalMatrix.rows();
+    const int oldM = originalMatrix.cols();
+    const int newN = updatedMatrix.rows();
+    const int newM = updatedMatrix.cols();
 
-    int newN = updatedMatrix.rows();
-    int newM = updatedMatrix.cols();
-
-    std::cout << "\n\n";
-
-    std::cout << "=== ORIGINAL MATRIX FOR GRAPH G2 ==="
-        << "\n\n";
-
-    // std::cout << std::setw(3) << "";
-    // for (int k = 0; k < oldM; ++k) {
-    //     std::cout << std::setw(3) << k;
-    // }
-    // std::cout << "\n";
-    // std::cout << std::setw(3) << "";
-    // for (int k = 0; k < oldM; ++k) {
-    //     std::cout << std::setw(3) << "_";
-    // }
-    // std::cout << "\n";
+    std::cout << "\n\n=== ORIGINAL MATRIX FOR GRAPH G2 ===\n\n";
     for (int i = 0; i < oldN; ++i, std::cout << "\n") {
         for (int j = 0; j < oldM; ++j) {
-            int cost = originalMatrix(i, j);
+            const int cost = originalMatrix(i, j);
             std::cout << std::setw(3) << cost;
         }
     }
 
-    std::cout << "\n\n";
-
-    std::cout << "=== EXTENDED MATRIX FOR GRAPH G2 ==="
-        << "\n\n";
-
-    // std::cout << std::setw(3) << "";
-    // for (int k = 0; k < newM; ++k) {
-    //     std::cout << std::setw(3) << k;
-    // }
-    // std::cout << "\n";
-    // std::cout << std::setw(3) << "";
-    // for (int k = 0; k < newM; ++k) {
-    //     std::cout << std::setw(3) << "_";
-    // }
-    // std::cout << "\n";
+    std::cout << "\n\n=== EXTENDED MATRIX FOR GRAPH G2 ===\n\n";
     for (int i = 0; i < newN; ++i, std::cout << "\n") {
         for (int j = 0; j < newM; ++j) {
-            int cost = updatedMatrix(i, j);
+            const int cost = updatedMatrix(i, j);
             if (cost > originalMatrix(i, j)) {
-                std::cout << COLOR_YELLOW <<std::setw(3) << cost << COLOR_RESET;
+                std::cout << COLOR_YELLOW << std::setw(3) << cost << COLOR_RESET;
             } else {
                 std::cout << std::setw(3) << cost;
             }
