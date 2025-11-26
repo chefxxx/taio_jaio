@@ -24,11 +24,11 @@ protected:
     }
 
     void callGetAllParameters(const std::vector<std::string>& args) {
-        std::vector<char*> argv;
+        std::vector<const char*> argv;
 
         argv.push_back(const_cast<char*>("program_name"));
         for (const auto& arg : args) {
-            argv.push_back(const_cast<char*>(arg.data()));
+            argv.push_back(arg.data());
         }
         argv.push_back(nullptr);
 

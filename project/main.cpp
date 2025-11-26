@@ -1,3 +1,4 @@
+#include <fstream>
 #include <iostream>
 #include <spdlog/spdlog.h>
 
@@ -36,6 +37,18 @@ int main(const int argc, const char **argv)
     // -----------
     const auto [A1, A2] = parseInputFile(inputFileName);
 
+    std::ifstream outputFileCheckStream;
+    outputFileCheckStream.open(outputFileName);
+    if (outputFileCheckStream.is_open()) {
+        spdlog::warn("The provided output file already exists -> output will be written into file {} + _time.txt");
+        auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+        std::stringstream ss;
+        ss << std::put_time(std::localtime(&time), "_%H_%M_%S");
+        outputFileName += ss.str() + ".txt";
+    }
+
+    std::ofstream outputFile(outputFileName);
+
     // -------------
     // Run algorithm
     // -------------
@@ -45,7 +58,8 @@ int main(const int argc, const char **argv)
     }
     else if (algorithm == "approximation") {
         spdlog::info("Approximation solution algorithm is called...");
-        approximationAlgorithm(A1, A2);
+        auto res = approximationAlgorithm(A1, A2);
+        printMatricesAfterAlgorithm(A2, res, &outputFile);
     }
     return 0;
 }

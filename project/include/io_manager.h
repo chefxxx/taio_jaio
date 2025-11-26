@@ -12,5 +12,5 @@
 std::tuple<Matrix, Matrix> parseInputFile(std::string_view t_inputFileName);
 Matrix                     convertToMatrix(std::ifstream &inputFile, int& lineNumber);
 
-void printMatricesAfterAlgorithm(const Matrix &originalMatrix, const Matrix &updatedMatrix);
+void printMatricesAfterAlgorithm(const Matrix &originalMatrix, const Matrix &updatedMatrix, std::ofstream* outputFile = nullptr);
 #endif // IO_MANAGER_H
