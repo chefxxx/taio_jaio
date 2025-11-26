@@ -69,9 +69,7 @@ void subgraphIsomorphismSerial(const SI_Problem                                 
 {
     if (t_state.R == t_P.v1) {
         const auto key = BitVecKey(t_state.M);
-        // ReSharper disable once CppTooWideScope
-        const auto isValid = checkIsomorphism(t_P.A1, t_P.A2, t_state.M);
-        if (isValid) {
+        if (const auto isValid = checkIsomorphism(t_P.A1, t_P.A2, t_state.M)) {
             t_mappings.try_emplace(key, computeSubgraphFromMapping(t_P.A1, t_state.M));
         }
         else {
