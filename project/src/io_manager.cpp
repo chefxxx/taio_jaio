@@ -58,38 +58,49 @@ Matrix convertToMatrix(std::ifstream &inputFile, int& lineNumber)
     }
 }
 
-void printMatricesAfterAlgorithm(const Matrix &originalMatrix, const Matrix &updatedMatrix)
+void printMatricesAfterAlgorithm(const Matrix &originalMatrix, const Matrix &updatedMatrix, std::ofstream* outputFile)
 {
-    spdlog::info("Printing extension result...\n");
     static const std::string COLOR_YELLOW = "\033[93m";
-    static const std::string COLOR_RESET  = "\033[0m";
-    const int                oldN         = originalMatrix.rows();
-    const int                oldM         = originalMatrix.cols();
-    const int                newN         = updatedMatrix.rows();
-    const int                newM         = updatedMatrix.cols();
+    static const std::string COLOR_RESET = "\033[0m";
+    static const int WIDTH = 3;
+    const int oldN = originalMatrix.rows();
+    const int oldM = originalMatrix.cols();
+    const int newN = updatedMatrix.rows();
+    const int newM = updatedMatrix.cols();
 
-    std::cout << "\n\n=== ORIGINAL MATRIX FOR GRAPH G2 ===\n\n";
-    for (int i = 0; i < oldN; ++i, std::cout << "\n") {
+    auto dualPrint = [&](std::string text, int width = 0, bool colored = false) {
+        if (colored)
+            std::cout << COLOR_YELLOW << std::setw(width) << text << COLOR_RESET;
+        else
+            std::cout << std::setw(width) << text;
+        if (outputFile != nullptr)
+            *outputFile << std::setw(width) << text;
+    };
+
+    dualPrint("\n\n=== ORIGINAL MATRIX FOR GRAPH G2 ===\n\n");
+
+
+    for (int i = 0; i < oldN; ++i, dualPrint("\n")) {
         for (int j = 0; j < oldM; ++j) {
-            const int cost = originalMatrix(i, j);
-            std::cout << std::setw(3) << cost;
+            int cost = originalMatrix(i, j);
+            dualPrint(std::to_string(cost), WIDTH);
         }
     }
 
-    std::cout << "\n\n=== EXTENDED MATRIX FOR GRAPH G2 ===\n\n";
-    for (int i = 0; i < newN; ++i, std::cout << "\n") {
+    dualPrint("\n\n=== EXTENDED MATRIX FOR GRAPH G2 ===\n\n");
+
+    for (int i = 0; i < newN; ++i, dualPrint("\n")) {
         for (int j = 0; j < newM; ++j) {
-            const int cost = updatedMatrix(i, j);
+            int cost = updatedMatrix(i, j);
             if (cost > originalMatrix(i, j)) {
-                std::cout << COLOR_YELLOW << std::setw(3) << cost << COLOR_RESET;
-            }
-            else {
-                std::cout << std::setw(3) << cost;
+                dualPrint(std::to_string(cost), WIDTH, true);
+            } else {
+                dualPrint(std::to_string(cost), WIDTH);
             }
         }
     }
 
-    std::cout << "\n\n";
+    dualPrint("\n\n");
 }
 
 void printMultipleMappings(const std::vector<Matrix> &t_mappings, const int t_number)
