@@ -38,7 +38,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const long t_
     // -----------------------------------------
     // Return mappings when extension not needed
     // -----------------------------------------
-    if (mappings.size() >= t_k) {
+    if (mappings.size() >= static_cast<size_t>(t_k)) {
         // TODO: return here mappings
         return;
     }
@@ -68,7 +68,7 @@ void subgraphIsomorphismSerial(const SI_Problem                                 
 {
     if (t_state.R == t_P.v1) {
         const auto key = BitVecKey(t_state.M);
-        if (const auto isValid = checkIsomorphism(t_P.A1, t_P.A2, t_state.M)) {
+        if ([[maybe_unused]] const auto isValid = checkIsomorphism(t_P.A1, t_P.A2, t_state.M)) {
             t_mappings.try_emplace(key, computeSubgraphFromMapping(t_P.A1, t_state.M));
         }
         else {
@@ -87,6 +87,18 @@ void subgraphIsomorphismSerial(const SI_Problem                                 
             t_state.serialPrevState(i);
         }
     }
+}
+
+std::tuple<std::vector<Matrix>, std::vector<Matrix>>
+convertMappingsToResult(const std::unordered_map<BitVecKey, Matrix> &t_mappings)
+{
+    std::vector<Matrix> maps;
+    std::vector<Matrix> graphs;
+    for (const auto &[key, subgraph] : t_mappings) {
+        maps.push_back(key.M);
+        graphs.push_back(subgraph);
+    }
+    return std::make_tuple(maps, graphs);
 }
 
 void clearExtensionsSubsetsWhereMappingExists(const std::unordered_map<BitVecKey, Matrix>        &t_mappings,
@@ -126,12 +138,11 @@ void computeMinimalExtensionSerial(ME_Problem &t_P, ME_State t_state)
 }
 
 std::tuple<ME_Problem, ME_State>
-prepareArgs_For_SubgraphIsomorphism(const size_t                                              t_matrixSize,
-                                    const std::unordered_map<BitVecKey, Matrix>              &t_mappings,
-                                    const std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions,
-                                    const long                                                t_k)
+prepareArgs_For_MinimalExtension(const size_t                                              t_matrixSize,
+                                 const std::unordered_map<BitVecKey, Matrix>              &t_mappings,
+                                 const std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions,
+                                 const long                                                t_k)
 {
-
     const size_t k = t_k - t_mappings.size();
     Matrix globMax{t_matrixSize, t_matrixSize};
     globMax.setConstant(MAX_MULTIPLICITY);
