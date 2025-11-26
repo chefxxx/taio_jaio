@@ -27,7 +27,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const long t_
     if (v2 > A2.rows())
         extendVertices(A2, v2);
 
-    auto [SI_globalState, SI_initState, mappings, extensions] = prepareArgs_For_SubgraphIsomorphism(t_A1, t_A2);
+    auto [SI_globalState, SI_initState, mappings, extensions] = prepareArgs_For_SubgraphIsomorphism(t_A1, A2);
 
     // ------------------
     // Run main algorithm

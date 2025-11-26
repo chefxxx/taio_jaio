@@ -2,14 +2,13 @@
 // Created by Mateusz Mikiciuk on 16/11/2025.
 //
 
-#include "io_manager.h"
-
 #include <exact_solution_infra.h>
 #include <fstream>
 #include <iostream>
 #include <spdlog/spdlog.h>
 #include <tuple>
 
+#include "io_manager.h"
 #include "common.h"
 
 std::tuple<Matrix, Matrix> parseInputFile(const std::string_view t_inputFileName)
