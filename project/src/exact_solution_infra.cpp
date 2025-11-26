@@ -39,7 +39,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const long t_
     // -----------------------------------------
     // Return mappings when extension not needed
     // -----------------------------------------
-    const auto [maps, graphs] = convertMappingsToResult(mappings);
+    auto [maps, graphs] = convertMappingsToResult(mappings);
     if (mappings.size() >= static_cast<size_t>(t_k)) {
         printMultipleMappings(maps, t_k, t_outputFile);
         return;
@@ -61,6 +61,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const long t_
     // ----------------------
     // Return combined result
     // ----------------------
+    maps.insert(maps.end(), ME_globalState.mappings.begin(), ME_globalState.mappings.end());
     printMultipleMappings(maps, maps.size(), t_outputFile);
     const auto resExt = (A2 + ME_globalState.global.matrix).eval();
     printMatricesAfterAlgorithm(A2, resExt, t_outputFile);
@@ -69,7 +70,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const long t_
 void subgraphIsomorphismSerial(const SI_Problem                                   &t_P,
                                SI_State                                           &t_state,
                                std::unordered_map<BitVecKey, Matrix>              &t_mappings,
-                               std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions)
+                               std::unordered_map<BitVecKey, std::vector<std::tuple<Matrix, Matrix>>> &t_extensions)
 {
     if (t_state.R == t_P.v1) {
         const auto key = BitVecKey(t_state.M);
@@ -80,7 +81,7 @@ void subgraphIsomorphismSerial(const SI_Problem                                 
             if (!t_extensions.contains(key)) {
                 t_extensions[key] = {};
             }
-            t_extensions[key].push_back(computeExtension(t_P.A1, t_P.A2, t_state.M));
+            t_extensions[key].emplace_back(computeExtension(t_P.A1, t_P.A2, t_state.M), t_state.M);
         }
         return;
     }
@@ -115,7 +116,7 @@ int computeDistance(const Matrix &t_M1, const Matrix &t_M2)
 }
 
 void clearExtensionsSubsetsWhereMappingExists(const std::unordered_map<BitVecKey, Matrix>        &t_mappings,
-                                              std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions)
+                                              std::unordered_map<BitVecKey, std::vector<std::tuple<Matrix, Matrix>>> &t_extensions)
 {
     // ReSharper disable once CppUseElementsView
     for (const auto &[key, matrix] : t_mappings) { // for all subsets that have mappings
@@ -130,6 +131,7 @@ void computeMinimalExtensionSerial(ME_Problem &t_P, ME_State t_state)
     if (t_state.k == 0) {
         if (t_state.local < t_P.global) {
             t_P.global = t_state.local;
+            t_P.mappings = t_state.mappings;
         }
         return;
     }
@@ -138,11 +140,15 @@ void computeMinimalExtensionSerial(ME_Problem &t_P, ME_State t_state)
     for (auto it = t_P.subsets.begin(); it != t_P.subsets.end(); ++it, ++i) {
         if (!t_state.usedKeys[i]) {
             const auto newKeys = generateNewKeys(t_state.usedKeys, i);
-            for (const auto &extension : it->second) {
+            for (const auto &value : it->second) {
+                const auto extension = std::get<0>(value);
                 // ReSharper disable once CppTooWideScopeInitStatement
                 const auto nextLocal = extendLocal(t_state.local, extension);
                 if (nextLocal < t_P.global) {
-                    const ME_State next{newKeys, t_state.k - 1, nextLocal};
+                    auto nMaps = t_state.mappings;
+                    const auto map = std::get<1>(value);
+                    nMaps.push_back(map);
+                    const ME_State next{newKeys, t_state.k - 1, nextLocal, nMaps};
                     computeMinimalExtensionSerial(t_P, next);
                 }
             }
@@ -153,7 +159,7 @@ void computeMinimalExtensionSerial(ME_Problem &t_P, ME_State t_state)
 std::tuple<ME_Problem, ME_State>
 prepareArgs_For_MinimalExtension(const size_t                                              t_matrixSize,
                                  const std::unordered_map<BitVecKey, Matrix>              &t_mappings,
-                                 const std::unordered_map<BitVecKey, std::vector<Matrix>> &t_extensions,
+                                 const std::unordered_map<BitVecKey, std::vector<std::tuple<Matrix, Matrix>>> &t_extensions,
                                  const long                                                t_k)
 {
     const size_t k = t_k - t_mappings.size();
@@ -170,7 +176,7 @@ prepareArgs_For_MinimalExtension(const size_t                                   
 std::tuple<SI_Problem,
            SI_State,
            std::unordered_map<BitVecKey, Matrix>,
-           std::unordered_map<BitVecKey, std::vector<Matrix>>>
+           std::unordered_map<BitVecKey, std::vector<std::tuple<Matrix, Matrix>>>>
 prepareArgs_For_SubgraphIsomorphism(const Matrix &t_A1, const Matrix &t_A2)
 {
     assert(t_A1.rows() == t_A1.cols());
@@ -181,6 +187,6 @@ prepareArgs_For_SubgraphIsomorphism(const Matrix &t_A1, const Matrix &t_A2)
     const SI_Problem                                         globalState{t_A1, t_A2};
     const SI_State                                           initState{cols, M, 0};
     const std::unordered_map<BitVecKey, Matrix>              mappings;
-    const std::unordered_map<BitVecKey, std::vector<Matrix>> extensions;
+    const std::unordered_map<BitVecKey, std::vector<std::tuple<Matrix, Matrix>>> extensions;
     return std::make_tuple(globalState, initState, mappings, extensions);
 }
