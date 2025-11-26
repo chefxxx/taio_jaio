@@ -18,31 +18,43 @@ std::tuple<Matrix, Matrix> parseInputFile(const std::string_view t_inputFileName
         exit(EXIT_FAILURE);
     }
 
-    auto a1 = convertToMatrix(inputFile);
-    auto a2 = convertToMatrix(inputFile);
+    int lineNumber = 0;
+    auto a1 = convertToMatrix(inputFile, lineNumber);
+    auto a2 = convertToMatrix(inputFile, lineNumber);
     return std::make_tuple(a1, a2);
 }
 
-Matrix convertToMatrix(std::ifstream &inputFile)
+Matrix convertToMatrix(std::ifstream &inputFile, int& lineNumber)
 {
     std::string line;
     std::getline(inputFile, line);
-    const auto v = std::stoi(line);
-    Matrix     a(v, v);
+    ++lineNumber;
+    try {
+        const auto v = std::stoul(line);
+        ++lineNumber;
+        Matrix     a(v, v);
 
-    for (int i = 0; i < v; ++i) {
-        std::getline(inputFile, line);
-        std::stringstream values(line);
-        std::string       segment;
-        std::vector<int>  segList;
-        while (std::getline(values, segment, ' ')) {
-            segList.push_back(std::stoi(segment));
+        for (unsigned i = 0; i < v; ++i, ++lineNumber) {
+            std::getline(inputFile, line);
+            std::stringstream values(line);
+            std::string       segment;
+            std::vector<int>  segList;
+            while (std::getline(values, segment, ' ')) {
+                segList.push_back(std::stoi(segment));
+            }
+            if (segList.size() != v) {
+                spdlog::error("The number of elements is different than the declared one. The error occurred in line: {}", lineNumber);
+                exit(EXIT_FAILURE);
+            }
+            for (unsigned j = 0; j < v; ++j) {
+                a(i, j) = segList[j];
+            }
         }
-        for (int j = 0; j < v; ++j) {
-            a(i, j) = segList[j];
-        }
+        return a;
+    } catch (const std::exception &e) {
+        spdlog::error("Failed to parse input file: {}. The error occurred in line: {}", e.what(), lineNumber);
+        exit(EXIT_FAILURE);
     }
-    return a;
 }
 
 void printMatricesAfterAlgorithm(const Matrix &originalMatrix, const Matrix &updatedMatrix)
