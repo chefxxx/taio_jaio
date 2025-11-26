@@ -59,9 +59,9 @@ TEST_F(OptionsReaderTest, check_default_values)
     callGetAllParameters(args);
 
     EXPECT_EQ(inFile, "data.in");
-    EXPECT_EQ(outFile, "result.txt"); // Default output
-    EXPECT_EQ(algType, "exact");               // Default type
-    EXPECT_EQ(k, 1);                  // Default k
+    EXPECT_EQ(outFile, "result");
+    EXPECT_EQ(algType, "exact");
+    EXPECT_EQ(k, 1);
 }
 
 TEST_F(OptionsReaderTest, check_all_parameters_approximation)

@@ -2,10 +2,13 @@
 // Created by mshamrai on 11/23/25.
 //
 
+#include <common.h>
+
 #include "generate_start_cost.h"
 #include "gtest/gtest.h"
 #include "hungarian_method.h"
 #include "upgrade_cost_function.h"
+
 class UpdateCostAfterHungarianTest : public ::testing::Test
 {
 public:
