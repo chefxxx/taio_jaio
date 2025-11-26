@@ -41,7 +41,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const long t_
     // -----------------------------------------
     const auto [maps, graphs] = convertMappingsToResult(mappings);
     if (mappings.size() >= static_cast<size_t>(t_k)) {
-        printMultipleMappings(maps, t_k);
+        printMultipleMappings(maps, t_k, TODO);
         //TODO: save to file
         return;
     }
@@ -62,7 +62,7 @@ void performExactAlgorithm(const Matrix &t_A1, const Matrix &t_A2, const long t_
     // ----------------------
     // Return combined result
     // ----------------------
-    printMultipleMappings(maps, maps.size());
+    printMultipleMappings(maps, maps.size(), TODO);
     printMatricesAfterAlgorithm(A2, ME_globalState.global.matrix);
     // TODO: save to file
 }

@@ -72,47 +72,49 @@ void dualPrint(const std::string &text, std::ofstream *outputFile, const int wid
         *outputFile << std::setw(width) << text;
 }
 
-void printMatricesAfterAlgorithm(const Matrix &originalMatrix, const Matrix &updatedMatrix, std::ofstream* outputFile)
+void printMatricesAfterAlgorithm(const Matrix  &t_originalMatrix,
+                                 const Matrix  &t_updatedMatrix,
+                                 std::ofstream *t_outputFile)
 {
-    const int oldN = originalMatrix.rows();
-    const int oldM = originalMatrix.cols();
-    const int newN = updatedMatrix.rows();
-    const int newM = updatedMatrix.cols();
+    const int oldN = t_originalMatrix.rows();
+    const int oldM = t_originalMatrix.cols();
+    const int newN = t_updatedMatrix.rows();
+    const int newM = t_updatedMatrix.cols();
 
-    dualPrint("\n\n=== ORIGINAL MATRIX FOR GRAPH G2 ===\n\n", outputFile);
+    dualPrint("\n\n=== ORIGINAL MATRIX FOR GRAPH G2 ===\n\n", t_outputFile);
 
-    for (int i = 0; i < oldN; ++i, dualPrint("\n", outputFile)) {
+    for (int i = 0; i < oldN; ++i, dualPrint("\n", t_outputFile)) {
         for (int j = 0; j < oldM; ++j) {
-            const int cost = originalMatrix(i, j);
-            dualPrint(std::to_string(cost), outputFile, WIDTH);
+            const int cost = t_originalMatrix(i, j);
+            dualPrint(std::to_string(cost), t_outputFile, WIDTH);
         }
     }
 
-    dualPrint("\n\n=== EXTENDED MATRIX FOR GRAPH G2 ===\n\n", outputFile);
+    dualPrint("\n\n=== EXTENDED MATRIX FOR GRAPH G2 ===\n\n", t_outputFile);
 
-    for (int i = 0; i < newN; ++i, dualPrint("\n", outputFile)) {
+    for (int i = 0; i < newN; ++i, dualPrint("\n", t_outputFile)) {
         for (int j = 0; j < newM; ++j) {
-            int cost = updatedMatrix(i, j);
-            if (cost > originalMatrix(i, j)) {
-                dualPrint(std::to_string(cost), outputFile, WIDTH, true);
+            int cost = t_updatedMatrix(i, j);
+            if (cost > t_originalMatrix(i, j)) {
+                dualPrint(std::to_string(cost), t_outputFile, WIDTH, true);
             } else {
-                dualPrint(std::to_string(cost), outputFile, WIDTH);
+                dualPrint(std::to_string(cost), t_outputFile, WIDTH);
             }
         }
     }
 
-    dualPrint("\n\n", outputFile);
+    dualPrint("\n\n", t_outputFile);
 }
 
-void printMultipleMappings(const std::vector<Matrix> &t_mappings, const int t_number)
+void printMultipleMappings(const std::vector<Matrix> &t_mappings, const int t_number, std::ofstream *t_outputFile)
 {
     spdlog::info("Printing mappings result...");
     for (int i = 0; i < t_number; ++i) {
         const auto map = getVectorOfMappingsFromMatrix(t_mappings[i]);
-        std::cout << "[";
+        dualPrint("[", t_outputFile);
         for (int k = 0; k < map.size(); ++k) {
-            std::cout << k << ":" << map[k] << ", ";
+            dualPrint(fmt::format("{}:{}, ", k, map[k]), t_outputFile);
         }
-        std::cout << "]\n";
+        dualPrint("]\n", t_outputFile);
     }
 }
