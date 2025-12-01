@@ -7,6 +7,9 @@
 
 #include "eigen_port.h"
 
-std::pair<Matrix> generateTwoGrapghs(int minN, int maxN, int maxMult, int seed);
+std::pair<Matrix, Matrix> generateTwoGraphs(unsigned int minM, unsigned int maxM, unsigned int maxMult,
+    unsigned int seed);
+
+std::pair<Matrix, Matrix> generateTwoGraphs(unsigned int minM, unsigned int maxM, unsigned int maxMult);
 
 #endif // TAIO_PROJECT_GRAPHS_GENERATOR_H
