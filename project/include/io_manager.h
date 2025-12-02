@@ -17,4 +17,6 @@ void printMatricesAfterAlgorithm(const Matrix  &t_originalMatrix,
                                  std::ofstream *t_outputFile = nullptr);
 void printMultipleMappings(const std::vector<Matrix> &t_mappings, int t_number, std::ofstream *t_outputFile);
 
+void dualPrint(const std::string &text, std::ofstream *outputFile, int width = 0, bool colored = false);
+
 #endif // IO_MANAGER_H

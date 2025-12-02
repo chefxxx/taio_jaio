@@ -64,7 +64,7 @@ const std::string COLOR_YELLOW = "\033[93m";
 const std::string COLOR_RESET = "\033[0m";
 constexpr int WIDTH = 3;
 
-void dualPrint(const std::string &text, std::ofstream *outputFile, const int width = 0, const bool colored = false)
+void dualPrint(const std::string &text, std::ofstream *outputFile, int width, bool colored)
 {
     if (colored)
         std::cout << COLOR_YELLOW << std::setw(width) << text << COLOR_RESET;

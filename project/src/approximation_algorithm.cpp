@@ -10,9 +10,9 @@
 #include "io_manager.h"
 #include <vector>
 
-void approximationAlgorithm(const Matrix &graph_1, const Matrix &graph_2, std::ofstream *outputFile)
+void printApproximationAlgorithmResult(const Matrix &graph_1, const Matrix &graph_2, const Matrix &updatedMapping,
+    std::ofstream *outputFile)
 {
-    auto updatedMapping = approximationAlgorithm(graph_1, graph_2);
     printMultipleMappings(std::vector{updatedMapping}, 1, outputFile);
     printMatricesAfterAlgorithm(graph_2, checkIsomorphism(graph_1, graph_2,
         updatedMapping) ?
