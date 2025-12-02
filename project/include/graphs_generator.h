@@ -12,4 +12,9 @@ std::pair<Matrix, Matrix> generateTwoGraphs(unsigned int minM, unsigned int maxM
 
 std::pair<Matrix, Matrix> generateTwoGraphs(unsigned int minM, unsigned int maxM, unsigned int maxMult);
 
+std::pair<Matrix, Matrix> generateTwoGraphsWithGivenSizes(unsigned int N, unsigned int M, unsigned int maxMult,
+    unsigned int seed);
+
+std::pair<Matrix, Matrix> generateTwoGraphsWithGivenSizes(unsigned int N, unsigned int M, unsigned int maxMult);
+
 #endif // TAIO_PROJECT_GRAPHS_GENERATOR_H
