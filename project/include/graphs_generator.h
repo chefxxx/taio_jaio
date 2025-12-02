@@ -7,8 +7,7 @@
 
 #include "eigen_port.h"
 
-std::pair<Matrix, Matrix> generateTwoGraphs(unsigned int minM, unsigned int maxM, unsigned int maxMult,
-    unsigned int seed);
+std::pair<Matrix, Matrix> generateTwoGraphs(unsigned int M, unsigned int N, unsigned int maxMult, unsigned int seed);
 
 std::pair<Matrix, Matrix> generateTwoGraphs(unsigned int minM, unsigned int maxM, unsigned int maxMult);
 
